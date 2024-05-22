@@ -301,6 +301,11 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     return sound;
   }
 
+  public override function toString():String
+  {
+    return 'FunkinSound(${this._label}, ${this.time})';
+  }
+
   /**
    * Creates a new `FunkinSound` object and loads it as the current music track.
    *
