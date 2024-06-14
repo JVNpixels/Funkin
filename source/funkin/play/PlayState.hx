@@ -2503,8 +2503,8 @@ class PlayState extends MusicBeatSubState
         healthChange = Constants.HEALTH_BAD_BONUS;
         isComboBreak = Constants.JUDGEMENT_BAD_COMBO_BREAK;
       case 'shit':
-        isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
         healthChange = Constants.HEALTH_SHIT_BONUS;
+        isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
     }
 
     // Send the note hit event.
@@ -2573,8 +2573,6 @@ class PlayState extends MusicBeatSubState
       }
     }
     vocals.playerVolume = 0;
-
-    if (Highscore.tallies.combo != 0) if (Highscore.tallies.combo >= 10) comboPopUps.displayCombo(0);
 
     applyScore(-10, 'miss', healthChange, true);
 
@@ -2793,7 +2791,7 @@ class PlayState extends MusicBeatSubState
       }
     }
     comboPopUps.displayRating(daRating);
-    if (combo >= 10 || combo == 0) comboPopUps.displayCombo(combo);
+    if (combo >= 10) comboPopUps.displayCombo(combo);
 
     vocals.playerVolume = 1;
   }
