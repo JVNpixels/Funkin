@@ -215,7 +215,7 @@ class FreeplayState extends MusicBeatSubState
       prepForNewRank = true;
     }
 
-    if (stickers != null)
+    if (stickers?.members != null)
     {
       stickerSubState = stickers;
     }
