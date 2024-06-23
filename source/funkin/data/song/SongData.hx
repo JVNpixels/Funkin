@@ -787,6 +787,7 @@ abstract SongEventData(SongEventDataRaw) from SongEventDataRaw to SongEventDataR
   {
     if(this.value == null) return null;
     var stringResult = Reflect.field(this.value, key);
+    if(stringResult == null) return null;
     var resultToHex = '#' + StringTools.hex(Std.parseInt(stringResult), 6);
     var result = FlxColor.fromString(resultToHex);
     return cast result;
