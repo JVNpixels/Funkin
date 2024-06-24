@@ -1302,12 +1302,18 @@ class PlayState extends MusicBeatSubState
     super.closeSubState();
   }
 
-  #if discord_rpc
   /**
    * Function called when the game window gains focus.
    */
   public override function onFocus():Void
   {
+    if (VideoCutscene.isPlaying() && FlxG.autoPause && isGamePaused) VideoCutscene.pauseVideo();
+    #if html5
+    else
+      VideoCutscene.resumeVideo();
+    #end
+
+    #if discord_rpc
     if (health > Constants.HEALTH_MIN && !paused && FlxG.autoPause)
     {
       if (Conductor.instance.songPosition > 0.0) DiscordClient.changePresence(detailsText, currentSong.song
@@ -1319,6 +1325,7 @@ class PlayState extends MusicBeatSubState
       else
         DiscordClient.changePresence(detailsText, currentSong.song + ' (' + storyDifficultyText + ')', iconRPC);
     }
+    #end
 
     super.onFocus();
   }
@@ -1328,12 +1335,17 @@ class PlayState extends MusicBeatSubState
    */
   public override function onFocusLost():Void
   {
+    #if html5
+    if (FlxG.autoPause) VideoCutscene.pauseVideo();
+    #end
+
+    #if discord_rpc
     if (health > Constants.HEALTH_MIN && !paused && FlxG.autoPause) DiscordClient.changePresence(detailsPausedText,
       currentSong.song + ' (' + storyDifficultyText + ')', iconRPC);
+    #end
 
     super.onFocusLost();
   }
-  #end
 
   /**
    * Removes any references to the current stage, then clears the stage cache,
