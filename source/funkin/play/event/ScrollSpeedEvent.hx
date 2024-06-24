@@ -113,6 +113,7 @@ class ScrollSpeedEvent extends SongEvent
         title: 'Target Value',
         defaultValue: 1.0,
         step: 0.1,
+        min: 0.1,
         type: SongEventFieldType.FLOAT,
         units: 'x'
       },
