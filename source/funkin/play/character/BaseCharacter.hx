@@ -272,6 +272,7 @@ class BaseCharacter extends Bopper
         {
           trace('Playing GF combo drop animation: ${dropAnim}');
           this.playAnimation(dropAnim, true, true);
+          comboAnimPlayed.clear();
         }
       case "combo":
         for (count in comboNoteCounts)
@@ -583,7 +584,6 @@ class BaseCharacter extends Bopper
     else if (event.note.noteData.getMustHitNote() && characterType == GF)
     {
       playCountAnimation("drop");
-      comboAnimPlayed.clear();
     }
   }
 
