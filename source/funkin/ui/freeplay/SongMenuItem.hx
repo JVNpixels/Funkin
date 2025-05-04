@@ -394,9 +394,6 @@ class SongMenuItem extends FlxSpriteGroup
     return evilTrail.color;
   }
 
-<<<<<<< HEAD
-  public function refreshDisplay(updateRank:Bool = true):Void
-=======
   public function toggleSongInfo(show:Bool):Void
   {
     ranking.visible = show;
@@ -416,7 +413,6 @@ class SongMenuItem extends FlxSpriteGroup
   }
 
   public function refreshDisplay():Void
->>>>>>> pr-4899
   {
     if (freeplayData == null)
     {
@@ -446,15 +442,6 @@ class SongMenuItem extends FlxSpriteGroup
         toggleNumberInfo(true);
       }
       pixelIcon.visible = true;
-<<<<<<< HEAD
-      updateBPM(Std.int(freeplayData.songStartingBpm) ?? 0);
-      updateDifficultyRating(freeplayData.difficultyRating ?? 0);
-      if (updateRank) updateScoringRank(freeplayData.scoringRank);
-      newText.visible = freeplayData.isNew;
-      favIcon.visible = freeplayData.isFav;
-      favIconBlurred.visible = freeplayData.isFav;
-=======
->>>>>>> pr-4899
       checkClip();
     }
     updateSelected();

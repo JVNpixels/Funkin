@@ -764,15 +764,7 @@ class FreeplayState extends MusicBeatSubState
     randomCapsule.initData(null, styleData, 1);
     randomCapsule.y = randomCapsule.intendedY(0) + 10;
     randomCapsule.targetPos.x = randomCapsule.x;
-<<<<<<< HEAD
-    randomCapsule.alpha = 1; // Why doesn't this get set to one as the other capsules do anyway?
-    randomCapsule.songText.visible = false;
-    randomCapsule.favIcon.visible = false;
-    randomCapsule.favIconBlurred.visible = false;
-    randomCapsule.ranking.visible = false;
-=======
     randomCapsule.alpha = 0;
->>>>>>> pr-4899
     randomCapsule.onConfirm = function() {
       capsuleOnConfirmRandom(randomCapsule);
     };
@@ -1892,7 +1884,7 @@ class FreeplayState extends MusicBeatSubState
       intendedCompletion = songScore == null ? 0.0 : Math.max(0, ((songScore.tallies.sick +
         songScore.tallies.good - songScore.tallies.missed) / songScore.tallies.totalNotes));
       rememberedDifficulty = currentDifficulty;
-      grpCapsules.members[curSelected].refreshDisplay((prepForNewRank == true) ? false : true);
+      grpCapsules.members[curSelected].refreshDisplay();
     }
     else
     {
@@ -2250,7 +2242,7 @@ class FreeplayState extends MusicBeatSubState
         songScore.tallies.good - songScore.tallies.missed) / songScore.tallies.totalNotes);
       rememberedSongId = daSongCapsule.freeplayData.data.id;
       changeDiff();
-      daSongCapsule.refreshDisplay((prepForNewRank == true) ? false : true);
+      daSongCapsule.refreshDisplay();
     }
     else
     {
