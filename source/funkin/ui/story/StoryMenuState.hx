@@ -240,7 +240,7 @@ class StoryMenuState extends MusicBeatState
 
   function playMenuMusic():Void
   {
-    FunkinSound.playMusic('freakyMenu',
+    FunkinSound.playMusic(Constants.MENU_MUSIC,
       {
         overrideExisting: true,
         restartTrack: false,
