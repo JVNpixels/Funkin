@@ -149,6 +149,8 @@ class Module implements IPlayStateScriptedClass implements IStateChangingScripte
    */
   public function onNoteMiss(event:NoteScriptEvent) {}
 
+  public function onNoteHoldHit(event:HoldNoteScriptEvent) {}
+
   public function onNoteHoldDrop(event:HoldNoteScriptEvent) {}
 
   /**

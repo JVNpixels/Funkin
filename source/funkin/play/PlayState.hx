@@ -2782,11 +2782,12 @@ class PlayState extends MusicBeatSubState
       // While the hold note is being hit, and there is length on the hold note...
       if (holdNote.hitNote && !holdNote.missedNote && holdNote.sustainLength > 0)
       {
-        // Make sure the opponent keeps singing while the note is held.
-        if (currentStage != null && currentStage.getDad() != null && currentStage.getDad().isSinging())
-        {
-          currentStage.getDad().holdTimer = 0;
-        }
+        // Dispatch the event, which should make the opponent keep singing while the note is held.
+        var event:HoldNoteScriptEvent = new HoldNoteScriptEvent(NOTE_HOLD_HIT, holdNote, 0, 0, false, 0);
+        dispatchEvent(event);
+
+        // Drop the held note if the event is cancelled.
+        if (event.eventCanceled) holdNote.missedNote = true;
       }
 
       if (holdNote.missedNote && !holdNote.handledMiss)
@@ -2798,7 +2799,8 @@ class PlayState extends MusicBeatSubState
         {
           // We dropped a hold note.
           // Play miss animation, but don't penalize.
-          if (currentStage != null) currentStage.getOpponent().playSingAnimation(holdNote.noteData.getDirection(), true);
+          var event:HoldNoteScriptEvent = new HoldNoteScriptEvent(NOTE_HOLD_DROP, holdNote, 0, 0, true, 0);
+          dispatchEvent(event);
         }
       }
     }
@@ -2866,18 +2868,21 @@ class PlayState extends MusicBeatSubState
       // While the hold note is being hit, and there is length on the hold note...
       if (holdNote.hitNote && !holdNote.missedNote && holdNote.sustainLength > 0)
       {
+        var healthChange:Float = Constants.HEALTH_HOLD_BONUS_PER_SECOND * elapsed;
+        var scoreChange:Int = Std.int(Constants.SCORE_HOLD_BONUS_PER_SECOND * elapsed);
+
+        var event:HoldNoteScriptEvent = new HoldNoteScriptEvent(NOTE_HOLD_HIT, holdNote, healthChange, scoreChange, false, Highscore.tallies.combo);
+        dispatchEvent(event);
+
         // Grant the player health.
         if (!isBotPlayMode && holdNote.scoreable)
         {
-          health += Constants.HEALTH_HOLD_BONUS_PER_SECOND * elapsed;
-          songScore += Std.int(Constants.SCORE_HOLD_BONUS_PER_SECOND * elapsed);
+          health += event.healthChange;
+          songScore += event.score;
         }
 
-        // Make sure the player keeps singing while the note is held by the bot.
-        if (isBotPlayMode && currentStage != null && currentStage.getBoyfriend() != null && currentStage.getBoyfriend().isSinging())
-        {
-          currentStage.getBoyfriend().holdTimer = 0;
-        }
+        // Drop the held note if the event is cancelled.
+        if (event.eventCanceled) holdNote.missedNote = true;
       }
 
       if (holdNote.missedNote && !holdNote.handledMiss)
