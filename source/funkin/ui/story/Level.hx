@@ -94,7 +94,7 @@ class Level implements IRegistryEntry<LevelData>
   }
 
   /**
-   * Whether this level is visible. If not, it will not be shown on the menu at all.
+   * Whether this level is visible. If not, it will not be shown in the story mode menu at all.
    * Override this in a script.
    * @default `true`
    * @return Whether this level is visible in the story mode menu
