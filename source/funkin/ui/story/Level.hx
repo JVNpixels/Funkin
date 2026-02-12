@@ -105,7 +105,7 @@ class Level implements IRegistryEntry<LevelData>
   }
 
   /**
-   * Whether this level is visible for freeplay. If not, it will not be shown in the freeplya menu at all.
+   * Whether this level is visible for freeplay. If not, it will not be shown in the freeplay menu at all.
    * Override this in a script.
    * @default `true`
    * @return Whether this level is visible in the menu
