@@ -105,6 +105,17 @@ class Level implements IRegistryEntry<LevelData>
   }
 
   /**
+   * Whether this level is visible for freeplay. If not, it will not be shown in the freeplya menu at all.
+   * Override this in a script.
+   * @default `true`
+   * @return Whether this level is visible in the menu
+   */
+  public function isVisibleFreeplay():Bool
+  {
+    return _data.visibleFreeplay;
+  }
+
+  /**
    * Build a sprite for the background of the level.
    * Can be overriden by ScriptedLevel. Not used if `isBackgroundSimple` returns true.
    * @return The constructed sprite
