@@ -7,7 +7,7 @@ import funkin.data.event.SongEventSchema;
 import funkin.data.event.SongEventSchema.SongEventFieldType;
 
 /**
- * This class represents a handler for configuring camera bop intensity and rate.
+ * This class handles song events which change how the camera bops to the beat of the song.
  *
  * Example: Bop the camera twice as hard, once per beat (rather than once every four beats).
  * ```
@@ -42,12 +42,15 @@ class SetCameraBopSongEvent extends SongEvent
 
     var rate:Null<Int> = data.getInt('rate');
     if (rate == null) rate = Constants.DEFAULT_ZOOM_RATE;
+    var offset:Null<Int> = data.getInt('offset');
+    if (rate == null) offset = Constants.DEFAULT_ZOOM_OFFSET;
     var intensity:Null<Float> = data.getFloat('intensity');
     if (intensity == null) intensity = 1.0;
 
     PlayState.instance.cameraBopIntensity = (Constants.DEFAULT_BOP_INTENSITY - 1.0) * intensity + 1.0;
     PlayState.instance.hudCameraZoomIntensity = (Constants.DEFAULT_BOP_INTENSITY - 1.0) * intensity * 2.0;
     PlayState.instance.cameraZoomRate = rate;
+    PlayState.instance.cameraZoomRateOffset = offset;
     trace('Set camera zoom rate to ${PlayState.instance.cameraZoomRate}');
   }
 
@@ -71,15 +74,25 @@ class SetCameraBopSongEvent extends SongEvent
       {
         name: 'intensity',
         title: 'Intensity',
-        defaultValue: 1.0,
+        defaultValue: Constants.DEFAULT_BOP_INTENSITY,
+        min: 0,
         step: 0.1,
         type: SongEventFieldType.FLOAT,
         units: 'x'
       },
       {
+        name: 'offset',
+        title: 'Offset',
+        defaultValue: Constants.DEFAULT_ZOOM_OFFSET,
+        step: 1,
+        type: SongEventFieldType.INTEGER,
+        units: 'beats'
+      },
+      {
         name: 'rate',
         title: 'Rate',
-        defaultValue: 4,
+        defaultValue: Constants.DEFAULT_ZOOM_RATE,
+        min: 0,
         step: 1,
         type: SongEventFieldType.INTEGER,
         units: 'beats/zoom'

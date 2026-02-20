@@ -5,6 +5,7 @@ import flixel.FlxBasic;
 /**
  * Handles volume control in a way that is compatible with alternate control schemes.
  */
+@:nullSafety
 class VolumePlugin extends FlxBasic
 {
   public function new()
@@ -21,7 +22,7 @@ class VolumePlugin extends FlxBasic
   {
     super.update(elapsed);
 
-    var isHaxeUIFocused:Bool = haxe.ui.focus.FocusManager.instance?.focus != null;
+    var isHaxeUIFocused:Bool = #if FEATURE_HAXEUI haxe.ui.focus.FocusManager.instance?.focus != null #else false #end;
 
     if (!isHaxeUIFocused)
     {

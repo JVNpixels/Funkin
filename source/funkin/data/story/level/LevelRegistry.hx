@@ -6,7 +6,8 @@ import funkin.ui.story.ScriptedLevel;
 import funkin.util.tools.ISingleton;
 import funkin.data.DefaultRegistryImpl;
 
-class LevelRegistry extends BaseRegistry<Level, LevelData> implements ISingleton implements DefaultRegistryImpl
+@:nullSafety
+class LevelRegistry extends BaseRegistry<Level, LevelData, LevelEntryParams> implements ISingleton implements DefaultRegistryImpl
 {
   /**
    * The current version string for the level data format.
@@ -39,7 +40,8 @@ class LevelRegistry extends BaseRegistry<Level, LevelData> implements ISingleton
       'week5',
       'week6',
       'week7',
-      'weekend1'
+      'weekend1',
+      'sserafim'
     ];
   }
 
@@ -55,3 +57,5 @@ class LevelRegistry extends BaseRegistry<Level, LevelData> implements ISingleton
     return result;
   }
 }
+
+typedef LevelEntryParams = {}

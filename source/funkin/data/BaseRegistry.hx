@@ -5,19 +5,21 @@ import funkin.util.VersionUtil;
 import haxe.Constraints.Constructible;
 
 /**
- * The entry's constructor function must take a single argument, the entry's ID.
+ * The entry's constructor function takes 2 arguments, the entry ID and optional parameters.
  */
-typedef EntryConstructorFunction = String->Void;
+typedef EntryConstructorFunction = (String, ?Dynamic) -> Void;
 
 /**
  * A base type for a Registry, which is an object which handles loading scriptable objects.
  *
  * @param T The type to construct. Must implement `IRegistryEntry`.
  * @param J The type of the JSON data used when constructing.
+ * @param P The type of the parameters used for `fetchEntry()`.
  */
+@:nullSafety
 @:generic
-@:autoBuild(funkin.util.macro.DataRegistryMacro.buildRegistry())
-abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructorFunction>), J>
+@:autoBuild(funkin.util.macro.RegistryMacro.buildRegistry())
+abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructorFunction>), J, P>
 {
   /**
    * The ID of the registry. Used when logging.
@@ -76,7 +78,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
     // SCRIPTED ENTRIES
     //
     var scriptedEntryClassNames:Array<String> = getScriptedClassNames();
-    log('Parsing ${scriptedEntryClassNames.length} scripted entries...');
+    log(' INFO '.info() + 'Parsing ${scriptedEntryClassNames.length} scripted entries...');
 
     for (entryCls in scriptedEntryClassNames)
     {
@@ -110,22 +112,22 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
     var unscriptedEntryIds:Array<String> = entryIdList.filter(function(entryId:String):Bool {
       return !entries.exists(entryId);
     });
-    log('Parsing ${unscriptedEntryIds.length} unscripted entries...');
+    log(' INFO '.info() + 'Parsing ${unscriptedEntryIds.length} unscripted entries...');
     for (entryId in unscriptedEntryIds)
     {
       try
       {
-        var entry:T = createEntry(entryId);
+        var entry:Null<T> = createEntry(entryId);
         if (entry != null)
         {
-          trace('  Loaded entry data: ${entry}');
+          log('Loaded entry data: ${entry}');
           entries.set(entry.id, entry);
         }
       }
       catch (e)
       {
         // Print the error.
-        trace('  Failed to load entry data: ${entryId}');
+        log(' WARNING '.warning() + ' Failed to load entry data: ${entryId}');
         trace(e);
         continue;
       }
@@ -155,7 +157,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @param id The ID of the entry.
    * @return `true` if the entry has an attached script, `false` otherwise.
    */
-  public function isScriptedEntry(id:String):Bool
+  public function isScriptedEntry(id:String, ?params:Null<P>):Bool
   {
     return scriptedEntryIds.exists(id);
   }
@@ -165,7 +167,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @param id The ID of the entry.
    * @return The class name, or `null` if it does not exist.
    */
-  public function getScriptedEntryClassName(id:String):String
+  public function getScriptedEntryClassName(id:String, ?params:Null<P>):Null<String>
   {
     return scriptedEntryIds.get(id);
   }
@@ -185,7 +187,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
    * @param id The ID of the entry to fetch.
    * @return The entry, or `null` if it does not exist.
    */
-  public function fetchEntry(id:String):Null<T>
+  public function fetchEntry(id:String, ?params:Null<P>):Null<T>
   {
     return entries.get(id);
   }
@@ -216,13 +218,13 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
   public function fetchEntryVersion(id:String):Null<thx.semver.Version>
   {
     var entryStr:String = loadEntryFile(id).contents;
-    var entryVersion:thx.semver.Version = VersionUtil.getVersionFromJSON(entryStr);
+    var entryVersion:Null<thx.semver.Version> = VersionUtil.getVersionFromJSON(entryStr);
     return entryVersion;
   }
 
   function log(message:String):Void
   {
-    trace('[' + registryId + '] ' + message);
+    trace(' $registryId '.bold().bg_note_down() + ' $message');
   }
 
   function loadEntryFile(id:String):JsonFile
@@ -331,7 +333,7 @@ abstract class BaseRegistry<T:(IRegistryEntry<J> & Constructible<EntryConstructo
 
   function printErrors(errors:Array<json2object.Error>, id:String = ''):Void
   {
-    trace('[${registryId}] Failed to parse entry data: ${id}');
+    trace(' $registryId '.bold().bg_note_down() + ' ERROR '.error() + 'Failed to parse entry data: ${id}');
 
     for (error in errors)
     {

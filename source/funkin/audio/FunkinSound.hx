@@ -20,9 +20,6 @@ import openfl.media.Sound;
 import openfl.media.SoundChannel;
 import openfl.media.SoundMixer;
 
-#if (openfl >= "8.0.0")
-#end
-
 /**
  * A FlxSound which adds additional functionality:
  * - Delayed playback via negative song position.
@@ -45,9 +42,9 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     if (_onVolumeChanged == null)
     {
       _onVolumeChanged = new FlxTypedSignal<Float->Void>();
-      FlxG.sound.volumeHandler = function(volume:Float) {
+      FlxG.sound.onVolumeChange.add(function(volume:Float) {
         _onVolumeChanged.dispatch(volume);
-      }
+      });
     }
     return _onVolumeChanged;
   }
@@ -75,7 +72,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
   override function set_volume(value:Float):Float
   {
     // Uncap the volume.
-    _volume = FlxMath.bound(value, 0.0, MAX_VOLUME);
+    _volume = value.clamp(0.0, MAX_VOLUME);
     updateTransform();
     return _volume;
   }
@@ -126,11 +123,6 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
    * For debug purposes.
    */
   var _label:String = "unknown";
-
-  /**
-   * Whether we received a focus lost event.
-   */
-  var _lostFocus:Bool = false;
 
   public function new()
   {
@@ -230,37 +222,6 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
       super.pause();
     }
     return this;
-  }
-
-  /**
-   * Called when the user clicks to focus on the window.
-   */
-  override function onFocus():Void
-  {
-    // Flixel can sometimes toss spurious `onFocus` events, e.g. if the Flixel debugger is toggled
-    // on and off. We only want to resume the sound if we actually lost focus, and if we weren't
-    // already paused before we lost focus.
-    if (_lostFocus && !_alreadyPaused)
-    {
-      // trace('Resuming audio (${this._label}) on focus!');
-      resume();
-    }
-    else
-    {
-      // trace('Not resuming audio (${this._label}) on focus!');
-    }
-    _lostFocus = false;
-  }
-
-  /**
-   * Called when the user tabs away from the window.
-   */
-  override function onFocusLost():Void
-  {
-    // trace('Focus lost, pausing audio!');
-    _lostFocus = true;
-    _alreadyPaused = _paused;
-    pause();
   }
 
   public override function resume():FunkinSound
@@ -408,10 +369,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
       var music = FunkinSound.load(pathToUse, params?.startingVolume ?? 1.0, params.loop ?? true, false, true, params.persist ?? false, params.onComplete);
       if (music != null)
       {
-        FlxG.sound.music = music;
-
-        // Prevent repeat update() and onFocus() calls.
-        FlxG.sound.list.remove(FlxG.sound.music);
+        setMusic(music);
 
         if (FlxG.sound.music != null && params.onLoad != null) params.onLoad();
 
@@ -422,6 +380,18 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
         return false;
       }
     }
+  }
+
+  /**
+   * Replaces the Flixel current music object with the given `FunkinSound` object.
+   * @param newMusic The new music to be set as the current music.
+   */
+  public static function setMusic(newMusic:FunkinSound):Void
+  {
+    FlxG.sound.music = newMusic;
+
+    // Prevent repeat update() and onFocus() calls.
+    FlxG.sound.list.remove(FlxG.sound.music);
   }
 
   public static function emptyPartialQueue():Void
@@ -478,7 +448,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
 
     if (autoPlay) sound.play();
     sound.volume = volume;
-    sound.group = FlxG.sound.defaultSoundGroup;
+    FlxG.sound.defaultSoundGroup.add(sound);
     sound.persist = persist;
     sound.important = important;
 
@@ -551,6 +521,7 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     }
     FlxTween.cancelTweensOf(this);
     this._label = 'unknown';
+    this._waveformData = null;
   }
 
   @:access(openfl.media.Sound)
@@ -570,8 +541,8 @@ class FunkinSound extends FlxSound implements ICloneable<FunkinSound>
     if (_sound == null) return;
 
     // Create a channel manually if the sound is considered important.
-    var pan:Float = FlxMath.bound(SoundMixer.__soundTransform.pan + _transform.pan, -1, 1);
-    var volume:Float = FlxMath.bound(SoundMixer.__soundTransform.volume * _transform.volume, 0, MAX_VOLUME);
+    var pan:Float = (SoundMixer.__soundTransform.pan + _transform.pan).clamp(-1, 1);
+    var volume:Float = (SoundMixer.__soundTransform.volume * _transform.volume).clamp(0, MAX_VOLUME);
 
     var audioSource:AudioSource = new AudioSource(_sound.__buffer);
     audioSource.offset = Std.int(startTime);

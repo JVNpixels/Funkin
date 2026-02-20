@@ -112,6 +112,7 @@ class ScreenshotPlugin extends FlxBasic
     lastHeight = FlxG.height;
 
     flashSprite = new Sprite();
+    flashSprite.mouseEnabled = false;
     flashSprite.alpha = 0;
     flashBitmap = new Bitmap(new BitmapData(lastWidth, lastHeight, true, Preferences.flashingLights ? FlxColor.WHITE : FlxColor.TRANSPARENT));
     flashSprite.addChild(flashBitmap);
@@ -469,7 +470,7 @@ class ScreenshotPlugin extends FlxBasic
   }
 
   /**
-   * Convert a Bitmap to a PNG or JPEG ByteArray to save to a file.
+   * Convert a Bitmap to a PNG ByteArray to save to a file.
    */
   function encode(bitmap:Bitmap):ByteArray
   {
@@ -494,7 +495,7 @@ class ScreenshotPlugin extends FlxBasic
     if (previousScreenshotName != targetPath && previousScreenshotName != (targetPath + ' (${previousScreenshotCopyNum})'))
     {
       previousScreenshotName = targetPath;
-      targetPath = getScreenshotPath() + targetPath + '.' + Std.string(Preferences.saveFormat).toLowerCase();
+      targetPath = getScreenshotPath() + targetPath + '.png';
       previousScreenshotCopyNum = 2;
     }
     else
@@ -506,7 +507,7 @@ class ScreenshotPlugin extends FlxBasic
         newTargetPath = targetPath + ' (${previousScreenshotCopyNum})';
       }
       previousScreenshotName = newTargetPath;
-      targetPath = getScreenshotPath() + newTargetPath + '.' + Std.string(Preferences.saveFormat).toLowerCase();
+      targetPath = getScreenshotPath() + newTargetPath + '.png';
     }
 
     // TODO: Make screenshot saving work on browser.
@@ -520,7 +521,7 @@ class ScreenshotPlugin extends FlxBasic
 
         if (pngData == null)
         {
-          trace('[WARN] Failed to encode ${Preferences.saveFormat} data');
+          trace(' WARNING '.warning() + ' Failed to encode PNG data');
           previousScreenshotName = null;
           // Just in case
           unsavedScreenshotBuffer.shift();
@@ -544,7 +545,7 @@ class ScreenshotPlugin extends FlxBasic
 
       if (pngData == null)
       {
-        trace('[WARN] Failed to encode ${Preferences.saveFormat} data');
+        trace(' WARNING '.warning() + ' Failed to encode PNG data');
         previousScreenshotName = null;
         return;
       }

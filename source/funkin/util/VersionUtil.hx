@@ -9,6 +9,7 @@ import thx.semver.Version.Identifier.StringId;
  * increment the minor version (1.x.0) if you make a new feature (but previous content is still compatible),
  * and increment the major version (x.0.0) if you make a breaking change (e.g. new API or reorganized file format).
  */
+@:nullSafety
 class VersionUtil
 {
   /**
@@ -32,6 +33,7 @@ class VersionUtil
     }
   }
 
+  @:nullSafety(Off)
   public static function repairVersion(version:thx.semver.Version):thx.semver.Version
   {
     var versionData:thx.semver.Version.SemVer = version;
@@ -39,7 +41,7 @@ class VersionUtil
     if (thx.Types.isAnonymousObject(versionData.version))
     {
       // This is bad! versionData.version should be an array!
-      trace('[SAVE] Version data repair required! (got ${versionData.version})');
+      trace(' SAVE '.bold().bg_note_down() + 'Version data repair required! (got ${versionData.version})');
       // Turn the objects back into arrays.
       // I'd use DynamicsT.values but IDK if it maintains order
       versionData.version = [versionData.version[0], versionData.version[1], versionData.version[2]];
@@ -55,12 +57,12 @@ class VersionUtil
       versionData.pre = preDataFixed;
 
       var fixedVersion:thx.semver.Version = versionData;
-      trace('[SAVE] Fixed version: ${fixedVersion}');
+      trace(' SAVE '.bold().bg_note_down() + 'Resolved version: ${fixedVersion}');
       return fixedVersion;
     }
     else
     {
-      trace('[SAVE] Version data repair not required (got ${version})');
+      trace(' SAVE '.bold().bg_note_down() + 'Save data migration/repair not required (got ${version})');
       // No need for repair.
       return version;
     }
@@ -109,7 +111,7 @@ class VersionUtil
    * @param input The JSON string to parse.
    * @return The semantic version, or null if it could not be parsed.
    */
-  public static function parseVersion(input:Dynamic):Null<thx.semver.Version>
+  public static function parseVersion(input:Null<Dynamic>):Null<thx.semver.Version>
   {
     if (input == null) return null;
 
