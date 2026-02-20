@@ -56,6 +56,9 @@ class ZoomCameraSongEvent extends SongEvent
     {
       case 'INSTANT':
         PlayState.instance.tweenCameraZoom(zoom, 0, isDirectMode);
+      case 'CLASSIC': // The zoom that tries to mimic the classic camera lerp behavior, but with camera zooming instead!
+        PlayState.instance.cancelCameraZoomTween();
+        PlayState.instance.lerpCameraZoom(zoom, isDirectMode);
       default:
         var durSeconds = Conductor.instance.stepLengthMs * duration / 1000;
         var easeFunctionName = '$ease$easeDir';
@@ -115,7 +118,7 @@ class ZoomCameraSongEvent extends SongEvent
       title: 'Easing Type',
       defaultValue: SongEvent.DEFAULT_EASE,
       type: SongEventFieldType.ENUM,
-      keys: ['Linear' => 'linear', 'Instant (Ignores duration)' => 'INSTANT', 'Sine' => 'sine', 'Quad' => 'quad', 'Cube' => 'cube', 'Quart' => 'quart', 'Quint' => 'quint', 'Expo' => 'expo', 'Smooth Step' => 'smoothStep', 'Smoother Step' => 'smootherStep', 'Elastic' => 'elastic', 'Back' => 'back', 'Bounce' => 'bounce', 'Circ ' => 'circ',]
+      keys: ['Linear' => 'linear', 'Instant (Ignores duration)' => 'INSTANT', 'Classic (Ignores duration)' => 'CLASSIC', 'Sine' => 'sine', 'Quad' => 'quad', 'Cube' => 'cube', 'Quart' => 'quart', 'Quint' => 'quint', 'Expo' => 'expo', 'Smooth Step' => 'smoothStep', 'Smoother Step' => 'smootherStep', 'Elastic' => 'elastic', 'Back' => 'back', 'Bounce' => 'bounce', 'Circ ' => 'circ',]
     }, {
       name: 'easeDir',
       title: 'Easing Direction',
