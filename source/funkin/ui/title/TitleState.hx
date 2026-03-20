@@ -51,7 +51,8 @@ class TitleState extends MusicBeatState
 
     // DEBUG BULLSHIT
 
-    if (!initialized) new FlxTimer().start(1, function(tmr:FlxTimer) {
+    if (!initialized) new FlxTimer().start(1, function(tmr:FlxTimer)
+    {
       startIntro();
     });
     else
@@ -64,7 +65,9 @@ class TitleState extends MusicBeatState
   var titleText:FunkinSprite;
   var maskShader = new LeftMaskShader();
 
+  #if FEATURE_VIDEO_PLAYBACK
   var attractTimer:FlxTimer;
+  #end
 
   function startIntro():Void
   {
@@ -93,16 +96,14 @@ class TitleState extends MusicBeatState
     add(logoBl);
     add(gfDance);
 
-    #if mobile
-    // shift it a bit more to the left on mobile!!
-    titleText = new FunkinSprite(50 + (FullScreenScaleMode.gameCutoutSize.x / 2), FlxG.height * 0.8);
-    titleText.frames = Paths.getSparrowAtlas('titleEnter_mobile');
-    #else
-    titleText = new FunkinSprite(100 + (FullScreenScaleMode.gameCutoutSize.x / 2), FlxG.height * 0.8);
-    titleText.frames = Paths.getSparrowAtlas('titleEnter');
-    #end
-    titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
-    titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
+    var titleTextPath:String = 'title-screen-text' #if mobile + '-mobile' #end;
+
+    // On mobile, the text is shifted more to the left to center it properly.
+    titleText = FunkinSprite.createTextureAtlas(#if mobile 50 #else 100 #end + (FullScreenScaleMode.gameCutoutSize.x / 2), FlxG.height * 0.8, titleTextPath, {
+      cacheOnLoad: true
+    });
+    titleText.anim.addByFrameLabel('idle', "Idle", 24);
+    titleText.anim.addByFrameLabel('press', "Confirm", 24);
     titleText.animation.play('idle');
     titleText.updateHitbox();
     titleText.shader = swagShader.shader;
@@ -156,8 +157,10 @@ class TitleState extends MusicBeatState
     else
       initialized = true;
 
+    #if FEATURE_VIDEO_PLAYBACK
     trace('Opening Attract state in ${Constants.TITLE_ATTRACT_DELAY} seconds...');
     attractTimer = new FlxTimer().start(Constants.TITLE_ATTRACT_DELAY, (_:FlxTimer) -> moveToAttract());
+    #end
   }
 
   /**
@@ -166,7 +169,8 @@ class TitleState extends MusicBeatState
   function moveToAttract():Void
   {
     FlxG.sound.music.fadeOut(2.0, 0);
-    FlxG.camera.fade(FlxColor.BLACK, 2.0, false, function() {
+    FlxG.camera.fade(FlxColor.BLACK, 2.0, false, function()
+    {
       FlxG.switchState(() -> new AttractState());
     });
   }
@@ -175,14 +179,13 @@ class TitleState extends MusicBeatState
   {
     var shouldFadeIn:Bool = (FlxG.sound.music == null);
     // Load music. Includes logic to handle BPM changes.
-    FunkinSound.playMusic('freakyMenu',
-      {
-        startingVolume: 0.0,
-        overrideExisting: true,
-        restartTrack: false,
-        // Continue playing this music between states, until a different music track gets played.
-        persist: true
-      });
+    FunkinSound.playMusic('freakyMenu', {
+      startingVolume: 0.0,
+      overrideExisting: true,
+      restartTrack: false,
+      // Continue playing this music between states, until a different music track gets played.
+      persist: true
+    });
     // Fade from 0.0 to 1 over 4 seconds
     if (shouldFadeIn) FlxG.sound.music.fadeIn(4.0, 0.0, 1.0);
   }
@@ -266,7 +269,8 @@ class TitleState extends MusicBeatState
       funkin.api.newgrounds.Events.logStartGame();
       #end
 
-      new FlxTimer().start(2, function(tmr:FlxTimer) {
+      new FlxTimer().start(2, function(tmr:FlxTimer)
+      {
         moveToMainMenu();
       });
     }
@@ -286,11 +290,13 @@ class TitleState extends MusicBeatState
 
   function moveToMainMenu():Void
   {
+    #if FEATURE_VIDEO_PLAYBACK
     if (attractTimer != null)
     {
       attractTimer.cancel();
       attractTimer = null;
     }
+    #end
 
     funkin.FunkinMemory.purgeCache();
     FlxG.switchState(() -> new MainMenuState());
@@ -322,28 +328,27 @@ class TitleState extends MusicBeatState
     }
     else
       curCheatPos = 0;
-
-    trace(input);
   }
 
   function startCheat():Void
   {
     cheatActive = true;
 
-    FunkinSound.playMusic('girlfriendsRingtone',
-      {
-        startingVolume: 0.0,
-        overrideExisting: true,
-        restartTrack: true
-      });
+    FunkinSound.playMusic('girlfriendsRingtone', {
+      startingVolume: 0.0,
+      overrideExisting: true,
+      restartTrack: true
+    });
 
     FlxG.sound.music.fadeIn(4.0, 0.0, 1.0);
 
     FlxG.camera.flash(FlxColor.WHITE, 1);
     FunkinSound.playOnce(Paths.sound('confirmMenu'), 0.7);
 
+    #if FEATURE_VIDEO_PLAYBACK
     // Stop the attract timer so you can listen to the whole song!
     attractTimer.cancel();
+    #end
   }
 
   function createCoolText(textArray:Array<String>):Void

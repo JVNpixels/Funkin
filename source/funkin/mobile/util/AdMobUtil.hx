@@ -72,7 +72,8 @@ class AdMobUtil
    */
   public static function init():Void
   {
-    Admob.onEvent.add(function(event:AdmobEvent):Void {
+    Admob.onEvent.add(function(event:AdmobEvent):Void
+    {
       switch (event.name)
       {
         case AdmobEvent.INIT_OK:
@@ -95,6 +96,10 @@ class AdMobUtil
     });
 
     Admob.configureUnity(Admob.getTCFConsentForPurpose(0) == 1, StringTools.startsWith(Admob.getUSPrivacy(), '1Y'));
+
+    Admob.configurePangle(Admob.getTCFConsentForPurpose(0) == 1, StringTools.startsWith(Admob.getUSPrivacy(), '1Y'));
+
+    Admob.configureVungle(StringTools.startsWith(Admob.getUSPrivacy(), '1Y'));
 
     Admob.init(#if TESTING_ADS true #else false #end);
   }

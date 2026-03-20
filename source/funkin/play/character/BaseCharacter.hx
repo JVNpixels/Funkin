@@ -253,6 +253,9 @@ class BaseCharacter extends Bopper
     // Set the x and y to be their original values.
     this.resetPosition();
 
+    // Resets danceEvery value to the original one.
+    this.danceEvery = _data.danceEvery;
+
     this.dance(true); // Force to avoid the old animation playing with the wrong offset at the start of the song.
     // Make sure we are playing the idle animation
     // ...then update the hitbox so that this.width and this.height are correct.
@@ -368,7 +371,11 @@ class BaseCharacter extends Bopper
     // Reset hold timer for each note pressed.
     if (justPressedNote() && this.characterType == BF)
     {
-      holdTimer = 0;
+      // If the note kind has `noanim` do not reset holdTimer.
+      if (curNoteKind != null && !curNoteKind.noanim)
+      {
+        holdTimer = 0;
+      }
     }
 
     if (isDead)
@@ -527,39 +534,21 @@ class BaseCharacter extends Bopper
     super.onNoteHit(event);
     // If another script cancelled the event, don't do anything.
     if (event.eventCanceled) return;
+
     curNoteKind = NoteKindManager.getNoteKind(event.note.noteData.kind);
+
+    // Let the character naturally transition back to their idle/dance animation.
+    if (curNoteKind != null && curNoteKind.noanim) return;
 
     if (event.note.noteData.getMustHitNote() && characterType == BF)
     {
-      if (curNoteKind != null)
-      {
-        if (!curNoteKind.noanim)
-        {
-          this.playSingAnimation(event.note.noteData.getDirection(), false, curNoteKind?.suffix);
-          holdTimer = 0;
-        }
-      }
-      else
-      {
-        this.playSingAnimation(event.note.noteData.getDirection(), false);
-        holdTimer = 0;
-      }
+      this.playSingAnimation(event.note.noteData.getDirection(), false, curNoteKind?.suffix ?? '');
+      holdTimer = 0;
     }
     else if (!event.note.noteData.getMustHitNote() && characterType == DAD)
     {
-      if (curNoteKind != null)
-      {
-        if (!curNoteKind.noanim)
-        {
-          this.playSingAnimation(event.note.noteData.getDirection(), false, curNoteKind?.suffix);
-          holdTimer = 0;
-        }
-      }
-      else
-      {
-        this.playSingAnimation(event.note.noteData.getDirection(), false);
-        holdTimer = 0;
-      }
+      this.playSingAnimation(event.note.noteData.getDirection(), false, curNoteKind?.suffix ?? '');
+      holdTimer = 0;
     }
     else if (characterType == GF && event.note.noteData.getMustHitNote())
     {
@@ -588,6 +577,7 @@ class BaseCharacter extends Bopper
     {
       // If the note is from the same strumline, play the miss animation.
       this.playSingAnimation(event.note.noteData.getDirection(), true);
+      this.holdTimer = 0;
     }
     else if (!event.note.noteData.getMustHitNote() && characterType == DAD)
     {

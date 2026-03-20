@@ -80,6 +80,7 @@ class AlbumRoll extends FlxSpriteGroup
     if (albumId == null)
     {
       this.visible = false;
+      albumData = null;
       return;
     }
     else
@@ -135,19 +136,17 @@ class AlbumRoll extends FlxSpriteGroup
 
     if (exitMoversCharSel == null) return;
 
-    exitMovers.set([newAlbumArt, difficultyStars],
-      {
-        x: FlxG.width,
-        speed: 0.4,
-        wait: 0
-      });
+    exitMovers.set([newAlbumArt, difficultyStars], {
+      x: FlxG.width,
+      speed: 0.4,
+      wait: 0
+    });
 
-    exitMoversCharSel.set([newAlbumArt, difficultyStars],
-      {
-        y: -175,
-        speed: 0.8,
-        wait: 0.1
-      });
+    exitMoversCharSel.set([newAlbumArt, difficultyStars], {
+      y: -175,
+      speed: 0.8,
+      wait: 0.1
+    });
   }
 
   var titleTimer:Null<FlxTimer> = null;
@@ -166,7 +165,8 @@ class AlbumRoll extends FlxSpriteGroup
     difficultyStars.visible = false;
     difficultyStars.flameCheck();
 
-    new FlxTimer().start(0.75, function(_) {
+    new FlxTimer().start(0.75, function(_)
+    {
       showTitle();
       showStars();
       if (albumTitle != null) albumTitle.animation.play('switch');
@@ -205,7 +205,8 @@ class AlbumRoll extends FlxSpriteGroup
     albumTitle.animation.addByPrefix('switch', 'switch0', 24, false);
     add(albumTitle);
 
-    albumTitle.animation.onFinish.add(function(name) {
+    albumTitle.animation.onFinish.add(function(name)
+    {
       if (name == 'switch' && albumTitle != null) albumTitle.animation.play('idle');
     });
     albumTitle.animation.play('idle');
@@ -215,19 +216,17 @@ class AlbumRoll extends FlxSpriteGroup
     albumTitle.x += titleOffsets[0];
     albumTitle.y += titleOffsets[1];
 
-    if (_exitMovers != null) _exitMovers.set([albumTitle],
-      {
-        x: FlxG.width,
-        speed: 0.4,
-        wait: 0
-      });
+    if (_exitMovers != null) _exitMovers.set([albumTitle], {
+      x: FlxG.width,
+      speed: 0.4,
+      wait: 0
+    });
 
-    if (_exitMoversCharSel != null) _exitMoversCharSel.set([albumTitle],
-      {
-        y: -190,
-        speed: 0.8,
-        wait: 0.1
-      });
+    if (_exitMoversCharSel != null) _exitMoversCharSel.set([albumTitle], {
+      y: -190,
+      speed: 0.8,
+      wait: 0.1
+    });
   }
 
   public function setDifficultyStars(?difficulty:Int):Void
@@ -243,6 +242,26 @@ class AlbumRoll extends FlxSpriteGroup
   {
     difficultyStars.visible = true;
     difficultyStars.flameCheck();
+  }
+
+  /**
+   * Returns the name for the OST associated with the album.
+   * If not specified, returns the default name if this is a base game album.
+   * @return Null<String>
+   */
+  public function getOSTNameOverride():Null<String>
+  {
+    var ostOverride:Null<String> = albumData?.getAlbumOSTName();
+    if (ostOverride != null)
+    {
+      return ostOverride;
+    }
+    else if (albumId == null || AlbumRegistry.instance.listBaseGameEntryIds().contains(albumId))
+    {
+      return Constants.DEFAULT_OST_NAME;
+    }
+
+    return null;
   }
 
   override function destroy():Void

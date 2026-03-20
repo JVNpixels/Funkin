@@ -8,7 +8,9 @@ import funkin.util.assets.FlxAnimationUtil;
  * Create a scripted class that extends AnimateAtlasFreeplayDJ to use this.
  */
 @:hscriptClass
-class ScriptedAnimateAtlasFreeplayDJ extends AnimateAtlasFreeplayDJ implements polymod.hscript.HScriptedClass {}
+class ScriptedAnimateAtlasFreeplayDJ extends AnimateAtlasFreeplayDJ implements polymod.hscript.HScriptedClass
+{
+}
 
 /**
  * An AnimateAtlasFreeplayDJ is a Freeplay DJ which is rendered by
@@ -47,7 +49,7 @@ class AnimateAtlasFreeplayDJ extends BaseFreeplayDJ
     FlxAnimationUtil.addTextureAtlasAnimations(this, playableCharData.getAnimationsList());
 
     var animationNames:Array<String> = this.animation.getNameList();
-    log('[ATLASDJ] Successfully loaded ${animationNames.length} animations for ${characterId}');
+    log('Successfully loaded ${animationNames.length} animations for ${characterId}');
   }
 
   public override function update(elapsed:Float):Void
