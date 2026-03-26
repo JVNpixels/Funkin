@@ -415,7 +415,7 @@ class FreeplayState extends MusicBeatSubState
 
     backingCard.instance = this;
     add(backingCard);
-    ScriptEventDispatcher.callEvent(backingCard, new ScriptEvent(CREATE, false));
+    ScriptEventDispatcher.callEvent(backingCard, ScriptEventDispatcher.recycleEvent(ScriptEvent, CREATE));
     backingCard.applyExitMovers(exitMovers, exitMoversCharSel);
 
     if (currentCharacter?.getFreeplayDJData() != null)
@@ -706,7 +706,7 @@ class FreeplayState extends MusicBeatSubState
     {
       if (!uiStateMachine.is(Interacting)) uiStateMachine.transition(Idle);
 
-      dispatchEvent(new FreeplayScriptEvent(FREEPLAY_INTRO));
+      dispatchEvent(ScriptEventDispatcher.recycleEvent(FreeplayScriptEvent, FREEPLAY_INTRO));
 
       // when boyfriend hits dat shiii
 
@@ -1011,7 +1011,11 @@ class FreeplayState extends MusicBeatSubState
     changeSelection();
     refreshCapsuleDisplays();
 
-    dispatchEvent(new CapsuleScriptEvent(DIFFICULTY_SWITCH, currentCapsule, currentDifficulty, currentVariation));
+    var event:CapsuleScriptEvent = ScriptEventDispatcher.recycleEvent(CapsuleScriptEvent, DIFFICULTY_SWITCH);
+    @:bypassAccessor event.capsule = currentCapsule;
+    @:bypassAccessor event.difficultyId = currentDifficulty;
+    @:bypassAccessor event.variationId = currentVariation;
+    dispatchEvent(event);
   }
 
   /**
@@ -2248,7 +2252,7 @@ class FreeplayState extends MusicBeatSubState
     FlxTimer.globalManager.clear();
     dj?.onIntroDone.removeAll();
 
-    dispatchEvent(new FreeplayScriptEvent(FREEPLAY_OUTRO));
+    dispatchEvent(ScriptEventDispatcher.recycleEvent(FreeplayScriptEvent, FREEPLAY_OUTRO));
 
     FunkinSound.playOnce(Paths.sound('cancelMenu'));
 
@@ -2310,7 +2314,7 @@ class FreeplayState extends MusicBeatSubState
           persist: true
         });
         FlxG.sound.music.fadeIn(4.0, 0.0, 1.0);
-        dispatchEvent(new FreeplayScriptEvent(FREEPLAY_CLOSE));
+        dispatchEvent(ScriptEventDispatcher.recycleEvent(FreeplayScriptEvent, FREEPLAY_CLOSE));
         close();
       }
       else
@@ -2741,7 +2745,11 @@ class FreeplayState extends MusicBeatSubState
   {
     uiStateMachine.transition(Exiting);
 
-    dispatchEvent(new CapsuleScriptEvent(SONG_SELECTED, currentCapsule, currentDifficulty, currentVariation));
+    var event:CapsuleScriptEvent = ScriptEventDispatcher.recycleEvent(CapsuleScriptEvent, SONG_SELECTED);
+    @:bypassAccessor event.capsule = currentCapsule;
+    @:bypassAccessor event.difficultyId = currentDifficulty;
+    @:bypassAccessor event.variationId = currentVariation;
+    dispatchEvent(event);
 
     PlayStatePlaylist.isStoryMode = false;
 
@@ -2971,7 +2979,11 @@ class FreeplayState extends MusicBeatSubState
     // Small vibrations every selection change.
     if (change != 0) HapticUtil.vibrate(0, 0.01, 0.5);
 
-    dispatchEvent(new CapsuleScriptEvent(CAPSULE_SELECTED, currentCapsule, currentDifficulty, currentVariation));
+    var event:CapsuleScriptEvent = ScriptEventDispatcher.recycleEvent(CapsuleScriptEvent, CAPSULE_SELECTED);
+    @:bypassAccessor event.capsule = currentCapsule;
+    @:bypassAccessor event.difficultyId = currentDifficulty;
+    @:bypassAccessor event.variationId = currentVariation;
+    dispatchEvent(event);
   }
 
   public function playCurSongPreview(?daSongCapsule:SongMenuItem):Void

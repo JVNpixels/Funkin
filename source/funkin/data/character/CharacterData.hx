@@ -291,7 +291,7 @@ class CharacterDataParser
     char.debug = debug;
 
     // Call onCreate only in the fetchCharacter() function, not at application initialization.
-    ScriptEventDispatcher.callEvent(char, new ScriptEvent(CREATE));
+    ScriptEventDispatcher.callEvent(char, ScriptEventDispatcher.recycleEvent(ScriptEvent, CREATE));
 
     return char;
   }

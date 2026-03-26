@@ -3,6 +3,8 @@ package funkin.play;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import funkin.modding.events.ScriptEvent;
+import funkin.modding.events.ScriptEventDispatcher;
+import funkin.modding.events.ScriptEventType;
 import funkin.modding.events.ScriptEvent.CountdownScriptEvent;
 import flixel.util.FlxTimer;
 import funkin.util.EaseUtil;
@@ -107,19 +109,18 @@ class Countdown
    */
   static function propagateCountdownEvent(index:CountdownStep):Bool
   {
-    var event:ScriptEvent;
-
-    switch (index)
+    var type:ScriptEventType = switch (index)
     {
       case BEFORE:
-        event = new CountdownScriptEvent(COUNTDOWN_START, index);
-      case THREE | TWO | ONE | GO: // I didn't know you could use `|` in a switch/case block!
-        event = new CountdownScriptEvent(COUNTDOWN_STEP, index);
+        ScriptEventType.COUNTDOWN_START;
       case AFTER:
-        event = new CountdownScriptEvent(COUNTDOWN_END, index, false);
+        ScriptEventType.COUNTDOWN_END;
       default:
-        return true;
+        ScriptEventType.COUNTDOWN_STEP;
     }
+
+    var event:CountdownScriptEvent = ScriptEventDispatcher.recycleEvent(CountdownScriptEvent, type, (index != AFTER));
+    @:bypassAccessor event.step = index;
 
     // Modules, stages, characters.
     @:privateAccess

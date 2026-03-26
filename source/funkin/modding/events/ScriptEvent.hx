@@ -24,29 +24,32 @@ class ScriptEvent
    * For example, cancelling COUNTDOWN_START should prevent the countdown from starting,
    * until another script restarts it, or cancelling NOTE_HIT should cause the note to be missed.
    */
-  public var cancelable(default, null):Bool;
+  public var cancelable(default, set):Bool = false;
 
   /**
    * The type associated with the event.
    */
-  public var type(default, null):ScriptEventType;
+  public var type(default, set):ScriptEventType = CREATE;
 
   /**
    * Whether the event should continue to be triggered on additional targets.
    */
-  public var shouldPropagate(default, null):Bool;
+  public var shouldPropagate(default, set):Bool = true;
 
   /**
    * Whether the event has been canceled by one of the scripts that received it.
    */
-  public var eventCanceled(default, null):Bool;
+  public var eventCanceled(default, set):Bool = false;
 
-  public function new(type:ScriptEventType, cancelable:Bool = false):Void
+  public function new():Void
   {
-    this.type = type;
-    this.cancelable = cancelable;
-    this.eventCanceled = false;
-    this.shouldPropagate = true;
+    @:bypassAccessor
+    {
+      this.cancelable = false;
+      this.shouldPropagate = true;
+      this.type = CREATE;
+      this.eventCanceled = false;
+    }
   }
 
   /**
@@ -57,6 +60,7 @@ class ScriptEvent
   {
     if (cancelable)
     {
+      @:bypassAccessor
       eventCanceled = true;
     }
   }
@@ -75,6 +79,7 @@ class ScriptEvent
    */
   public function stopPropagation():Void
   {
+    @:bypassAccessor
     shouldPropagate = false;
   }
 
@@ -82,6 +87,17 @@ class ScriptEvent
   {
     return 'ScriptEvent(type=$type, cancelable=$cancelable)';
   }
+
+  // These setters don't do anything other than prevent scripts from setting their values.
+  // In source, we can use `@:bypassAccessor` on them.
+
+  function set_cancelable(value:Bool) return value;
+
+  function set_type(value:ScriptEventType) return value;
+
+  function set_eventCanceled(value:Bool) return value;
+
+  function set_shouldPropagate(value:Bool) return value;
 }
 
 /**
@@ -96,18 +112,18 @@ class NoteScriptEvent extends ScriptEvent
    * The note associated with this event.
    * You cannot replace it, but you can edit it.
    */
-  public var note(default, null):NoteSprite;
+  public var note(default, set):Null<NoteSprite>;
 
   /**
    * The combo count as it is with this event.
    * Will be (combo) on miss events and (combo + 1) on hit events (the stored combo count won't update if the event is cancelled).
    */
-  public var comboCount(default, null):Int;
+  public var comboCount(default, set):Int;
 
   /**
    * Whether to play the record scratch sound (if this event type is `NOTE_MISS`).
    */
-  public var playSound(default, default):Bool;
+  public var playSound:Bool;
 
   /**
    * The health gained or lost from this note.
@@ -115,19 +131,20 @@ class NoteScriptEvent extends ScriptEvent
    */
   public var healthChange:Float;
 
-  public function new(type:ScriptEventType, note:NoteSprite, healthChange:Float, comboCount:Int = 0, cancelable:Bool = false):Void
+  public function new():Void
   {
-    super(type, cancelable);
-    this.note = note;
-    this.comboCount = comboCount;
+    super();
     this.playSound = true;
-    this.healthChange = healthChange;
   }
 
   override public function toString():String
   {
     return 'NoteScriptEvent(type=' + type + ', cancelable=' + cancelable + ', note=' + note + ', comboCount=' + comboCount + ')';
   }
+
+  function set_note(value:Null<NoteSprite>) return value;
+
+  function set_comboCount(value:Int) return value;
 }
 
 class HitNoteScriptEvent extends NoteScriptEvent
@@ -158,15 +175,11 @@ class HitNoteScriptEvent extends NoteScriptEvent
    */
   public var doesNotesplash:Bool = false;
 
-  public function new(note:NoteSprite, healthChange:Float, score:Float, judgement:String, isComboBreak:Bool, comboCount:Int = 0, hitDiff:Float = 0,
-      doesNotesplash:Bool = false):Void
+  public function new():Void
   {
-    super(NOTE_HIT, note, healthChange, comboCount, true);
-    this.score = score;
-    this.judgement = judgement;
-    this.isComboBreak = isComboBreak;
-    this.doesNotesplash = doesNotesplash;
-    this.hitDiff = hitDiff;
+    super();
+    @:bypassAccessor this.type = NOTE_HIT;
+    @:bypassAccessor this.cancelable = true;
   }
 
   override public function toString():String
@@ -184,49 +197,49 @@ class GhostMissNoteScriptEvent extends ScriptEvent
   /**
    * The direction that was mistakenly pressed.
    */
-  public var dir(default, null):NoteDirection;
+  public var dir(default, set):NoteDirection;
 
   /**
    * Whether there was a note within judgement range when this ghost note was pressed.
    */
-  public var hasPossibleNotes(default, null):Bool;
+  public var hasPossibleNotes(default, set):Bool;
 
   /**
    * How much health should be lost when this ghost note is pressed.
    * Remember that max health is 2.00.
    */
-  public var healthChange(default, default):Float;
+  public var healthChange:Float;
 
   /**
    * How much score should be lost when this ghost note is pressed.
    */
-  public var scoreChange(default, default):Float;
+  public var scoreChange:Float;
 
   /**
    * Whether to play the record scratch sound.
    */
-  public var playSound(default, default):Bool;
+  public var playSound:Bool;
 
   /**
    * Whether to play the miss animation on the player.
    */
-  public var playAnim(default, default):Bool;
+  public var playAnim:Bool;
 
-  public function new(dir:NoteDirection, hasPossibleNotes:Bool, healthChange:Float, scoreChange:Float):Void
+  public function new():Void
   {
-    super(NOTE_GHOST_MISS, true);
-    this.dir = dir;
-    this.hasPossibleNotes = hasPossibleNotes;
-    this.healthChange = healthChange;
-    this.scoreChange = scoreChange;
-    this.playSound = true;
-    this.playAnim = true;
+    super();
+    @:bypassAccessor this.type = NOTE_GHOST_MISS;
+    @:bypassAccessor this.cancelable = true;
   }
 
   override public function toString():String
   {
     return 'GhostMissNoteScriptEvent(dir=' + dir + ', hasPossibleNotes=' + hasPossibleNotes + ')';
   }
+
+  function set_dir(value:NoteDirection) return value;
+
+  function set_hasPossibleNotes(value:Bool) return value;
 }
 
 class HoldNoteScriptEvent extends NoteScriptEvent
@@ -234,7 +247,7 @@ class HoldNoteScriptEvent extends NoteScriptEvent
   /**
    * The hold note that was hit (or dropped).
    */
-  public var holdNote:SustainTrail;
+  public var holdNote(default, set):Null<SustainTrail>;
 
   /**
    * The score the player received for hitting the note.
@@ -257,19 +270,18 @@ class HoldNoteScriptEvent extends NoteScriptEvent
    */
   public var doesNotesplash:Bool = false;
 
-  public function new(type:ScriptEventType, holdNote:SustainTrail, healthChange:Float, score:Float, isComboBreak:Bool, comboCount:Int = 0,
-      cancelable:Bool = false):Void
+  public function new():Void
   {
-    super(type, null, healthChange, comboCount, true);
-    this.holdNote = holdNote;
-    this.score = score;
-    this.isComboBreak = isComboBreak;
+    super();
+    @:bypassAccessor this.cancelable = true;
   }
 
   override public function toString():String
   {
     return 'HoldNoteScriptEvent(type=$type, holdNote=$holdNote, healthChange=$healthChange, score=$score, isComboBreak=$isComboBreak, cancelable=$cancelable)';
   }
+
+  function set_holdNote(value:Null<SustainTrail>) return value;
 }
 
 /**
@@ -281,18 +293,21 @@ class SongEventScriptEvent extends ScriptEvent
    * The note associated with this event.
    * You cannot replace it, but you can edit it.
    */
-  public var eventData(default, null):funkin.data.song.SongData.SongEventData;
+  public var eventData(default, set):SongEventData;
 
-  public function new(eventData:funkin.data.song.SongData.SongEventData):Void
+  public function new():Void
   {
-    super(SONG_EVENT, true);
-    this.eventData = eventData;
+    super();
+    @:bypassAccessor this.type = SONG_EVENT;
+    @:bypassAccessor this.cancelable = true;
   }
 
   override public function toString():String
   {
     return 'SongEventScriptEvent(event=' + eventData + ')';
   }
+
+  function set_eventData(value:SongEventData) return value;
 }
 
 /**
@@ -304,18 +319,21 @@ class UpdateScriptEvent extends ScriptEvent
    * The note associated with this event.
    * You cannot replace it, but you can edit it.
    */
-  public var elapsed(default, null):Float;
+  public var elapsed(default, set):Float;
 
-  public function new(elapsed:Float):Void
+  public function new():Void
   {
-    super(UPDATE, false);
-    this.elapsed = elapsed;
+    super();
+    @:bypassAccessor this.type = UPDATE;
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
   {
     return 'UpdateScriptEvent(elapsed=$elapsed)';
   }
+
+  function set_elapsed(value:Float) return value;
 }
 
 /**
@@ -327,24 +345,27 @@ class SongTimeScriptEvent extends ScriptEvent
   /**
    * The current beat of the song.
    */
-  public var beat(default, null):Int;
+  public var beat(default, set):Int;
 
   /**
    * The current step of the song.
    */
-  public var step(default, null):Int;
+  public var step(default, set):Int;
 
-  public function new(type:ScriptEventType, beat:Int, step:Int):Void
+  public function new():Void
   {
-    super(type, true);
-    this.beat = beat;
-    this.step = step;
+    super();
+    @:bypassAccessor this.cancelable = true;
   }
 
   override public function toString():String
   {
     return 'SongTimeScriptEvent(type=' + type + ', beat=' + beat + ', step=' + step + ')';
   }
+
+  function set_beat(value:Int) return value;
+
+  function set_step(value:Int) return value;
 }
 
 /**
@@ -356,18 +377,19 @@ class CountdownScriptEvent extends ScriptEvent
   /**
    * The current step of the countdown.
    */
-  public var step(default, null):CountdownStep;
+  public var step(default, set):CountdownStep;
 
-  public function new(type:ScriptEventType, step:CountdownStep, cancelable:Bool = true):Void
+  public function new():Void
   {
-    super(type, cancelable);
-    this.step = step;
+    super();
   }
 
   override public function toString():String
   {
     return 'CountdownScriptEvent(type=' + type + ', step=' + step + ')';
   }
+
+  function set_step(value:CountdownStep) return value;
 }
 
 /**
@@ -378,18 +400,19 @@ class DialogueScriptEvent extends ScriptEvent
   /**
    * The dialogue being referenced by the event.
    */
-  public var conversation(default, null):Conversation;
+  public var conversation(default, set):Conversation;
 
-  public function new(type:ScriptEventType, conversation:Conversation, cancelable:Bool = true):Void
+  public function new():Void
   {
-    super(type, cancelable);
-    this.conversation = conversation;
+    super();
   }
 
   override public function toString():String
   {
     return 'DialogueScriptEvent(type=$type, conversation=$conversation)';
   }
+
+  function set_conversation(value:Conversation) return value;
 }
 
 /**
@@ -400,18 +423,20 @@ class KeyboardInputScriptEvent extends ScriptEvent
   /**
    * The associated keyboard event.
    */
-  public var event(default, null):KeyboardEvent;
+  public var event(default, set):KeyboardEvent;
 
-  public function new(type:ScriptEventType, event:KeyboardEvent):Void
+  public function new():Void
   {
-    super(type, false);
-    this.event = event;
+    super();
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
   {
     return 'KeyboardInputScriptEvent(type=' + type + ', event=' + event + ')';
   }
+
+  function set_event(value:KeyboardEvent) return value;
 }
 
 /**
@@ -427,44 +452,30 @@ class SongLoadScriptEvent extends ScriptEvent
    * Modifying this will carry over to the song, so feel free to edit it
    * (to easily mirror a chart, randomize it, add/remove notes, etc.)
    */
-  public var notes(default, set):Array<SongNoteData>;
+  public var notes:Array<SongNoteData>;
 
   /**
    * The event data for the song that just loaded.
    * Modifying this will carry over to the song, so feel free to edit it
    * (add/remove events, modify event data, etc.)
    */
-  public var events(default, set):Array<SongEventData>;
+  public var events:Array<SongEventData>;
 
   /**
    * The ID of the song that just loaded.
    */
-  public var id(default, null):String;
+  public var id(default, set):String;
 
   /**
    * The difficulty of the song that just loaded.
    */
-  public var difficulty(default, null):String;
+  public var difficulty(default, set):String;
 
-  function set_notes(notes:Array<SongNoteData>):Array<SongNoteData>
+  public function new():Void
   {
-    this.notes = notes;
-    return this.notes;
-  }
-
-  function set_events(events:Array<SongEventData>):Array<SongEventData>
-  {
-    this.events = events;
-    return this.events;
-  }
-
-  public function new(id:String, difficulty:String, notes:Array<SongNoteData>, events:Array<SongEventData>):Void
-  {
-    super(SONG_LOADED, false);
-    this.id = id;
-    this.difficulty = difficulty;
-    this.notes = notes;
-    this.events = events;
+    super();
+    @:bypassAccessor this.type = SONG_LOADED;
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
@@ -473,6 +484,10 @@ class SongLoadScriptEvent extends ScriptEvent
     var eventStr = events == null ? 'null' : 'Array(' + events.length + ')';
     return 'SongLoadScriptEvent(notes=$noteStr, events=$eventStr, id=$id, difficulty=$difficulty)';
   }
+
+  function set_id(value:String) return value;
+
+  function set_difficulty(value:String) return value;
 }
 
 /**
@@ -483,18 +498,21 @@ class SongRetryEvent extends ScriptEvent
   /**
    * The new difficulty of the song.
    */
-  public var difficulty(default, null):String;
+  public var difficulty(default, set):String;
 
-  public function new(difficulty:String):Void
+  public function new():Void
   {
-    super(SONG_RETRY, false);
-    this.difficulty = difficulty;
+    super();
+    @:bypassAccessor this.type = SONG_RETRY;
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
   {
     return 'SongRetryEvent(difficulty=$difficulty)';
   }
+
+  function set_difficulty(value:String) return value;
 }
 
 /**
@@ -505,18 +523,19 @@ class StateChangeScriptEvent extends ScriptEvent
   /**
    * The state the game is moving into.
    */
-  public var targetState(default, null):FlxState;
+  public var targetState(default, set):FlxState;
 
-  public function new(type:ScriptEventType, targetState:FlxState, cancelable:Bool = false):Void
+  public function new():Void
   {
-    super(type, cancelable);
-    this.targetState = targetState;
+    super();
   }
 
   override public function toString():String
   {
     return 'StateChangeScriptEvent(type=' + type + ', targetState=' + targetState + ')';
   }
+
+  function set_targetState(value:FlxState) return value;
 }
 
 /**
@@ -524,9 +543,10 @@ class StateChangeScriptEvent extends ScriptEvent
  */
 class FocusScriptEvent extends ScriptEvent
 {
-  public function new(type:ScriptEventType):Void
+  public function new():Void
   {
-    super(type, false);
+    super();
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
@@ -543,24 +563,22 @@ class CapsuleScriptEvent extends ScriptEvent
   /**
    * The capsule that was selected.
    */
-  public var capsule(default, null):SongMenuItem;
+  public var capsule(default, set):SongMenuItem;
 
   /**
    * The difficulty ID of the selected song.
    */
-  public var difficultyId(default, null):String;
+  public var difficultyId(default, set):String;
 
   /**
    * The variation ID of the selected song.
    */
-  public var variationId(default, null):String;
+  public var variationId(default, set):String;
 
-  public function new(type:ScriptEventType, capsule:SongMenuItem, difficultyId:String, variationId:String):Void
+  public function new():Void
   {
-    super(type, false);
-    this.capsule = capsule;
-    this.difficultyId = difficultyId;
-    this.variationId = variationId;
+    super();
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
@@ -568,6 +586,12 @@ class CapsuleScriptEvent extends ScriptEvent
     var songName = this.capsule.freeplayData?.fullSongName ?? 'Random';
     return 'CapsuleScriptEvent(type=$type, capsule=$songName)';
   }
+
+  function set_capsule(value:SongMenuItem) return value;
+
+  function set_difficultyId(value:String) return value;
+
+  function set_variationId(value:String) return value;
 }
 
 /**
@@ -575,9 +599,10 @@ class CapsuleScriptEvent extends ScriptEvent
  */
 class FreeplayScriptEvent extends ScriptEvent
 {
-  public function new(type:ScriptEventType):Void
+  public function new():Void
   {
-    super(type, false);
+    super();
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
@@ -594,18 +619,20 @@ class CharacterSelectScriptEvent extends ScriptEvent
   /**
    * The character ID of the selected character.
    */
-  public var characterId(default, null):String;
+  public var characterId(default, set):String;
 
-  public function new(type:ScriptEventType, characterId:String):Void
+  public function new():Void
   {
-    super(type, false);
-    this.characterId = characterId;
+    super();
+    @:bypassAccessor this.cancelable = false;
   }
 
   override public function toString():String
   {
     return 'CharacterSelectScriptEvent(type=' + type + ')';
   }
+
+  function set_characterId(value:String) return value;
 }
 
 /**
@@ -616,18 +643,19 @@ class SubStateScriptEvent extends ScriptEvent
   /**
    * The state the game is moving into.
    */
-  public var targetState(default, null):FlxSubState;
+  public var targetState(default, set):FlxSubState;
 
-  public function new(type:ScriptEventType, targetState:FlxSubState, cancelable:Bool = false):Void
+  public function new():Void
   {
-    super(type, cancelable);
-    this.targetState = targetState;
+    super();
   }
 
   override public function toString():String
   {
     return 'SubStateScriptEvent(type=' + type + ', targetState=' + targetState + ')';
   }
+
+  function set_targetState(value:FlxSubState) return value;
 }
 
 /**
@@ -638,11 +666,12 @@ class PauseScriptEvent extends ScriptEvent
   /**
    * Whether to use the Gitaroo Man pause.
    */
-  public var gitaroo(default, default):Bool;
+  public var gitaroo:Bool;
 
-  public function new(gitaroo:Bool):Void
+  public function new():Void
   {
-    super(PAUSE, true);
-    this.gitaroo = gitaroo;
+    super();
+    @:bypassAccessor this.type = PAUSE;
+    @:bypassAccessor this.cancelable = false;
   }
 }

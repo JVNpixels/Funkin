@@ -855,7 +855,9 @@ class CharSelectSubState extends MusicBeatSubState
         mobileDeny = false;
         cursors.unconfirm();
 
-        dispatchEvent(new CharacterSelectScriptEvent(CHARACTER_DESELECTED, curChar));
+        var event:CharacterSelectScriptEvent = ScriptEventDispatcher.recycleEvent(CharacterSelectScriptEvent, CHARACTER_DESELECTED);
+        @:bypassAccessor event.characterId = curChar;
+        dispatchEvent(event);
 
         #if FEATURE_TOUCH_CONTROLS
         if (backButton != null)
@@ -894,7 +896,9 @@ class CharSelectSubState extends MusicBeatSubState
 
         FunkinSound.playOnce(Paths.sound('CS_confirm'));
 
-        dispatchEvent(new CharacterSelectScriptEvent(CHARACTER_CONFIRMED, curChar));
+        var event:CharacterSelectScriptEvent = ScriptEventDispatcher.recycleEvent(CharacterSelectScriptEvent, CHARACTER_CONFIRMED);
+        @:bypassAccessor event.characterId = curChar;
+        dispatchEvent(event);
 
         #if FEATURE_TOUCH_CONTROLS
         if (backButton != null)
@@ -1165,7 +1169,9 @@ class CharSelectSubState extends MusicBeatSubState
     else
       staticSound.stop();
 
-    dispatchEvent(new CharacterSelectScriptEvent(CHARACTER_SELECTED, value));
+    var event:CharacterSelectScriptEvent = ScriptEventDispatcher.recycleEvent(CharacterSelectScriptEvent, CHARACTER_SELECTED);
+    @:bypassAccessor event.characterId = curChar;
+    dispatchEvent(event);
 
     nametag.switchChar(value);
     gfChill.visible = false;

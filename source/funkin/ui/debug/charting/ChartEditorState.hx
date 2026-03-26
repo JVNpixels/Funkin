@@ -39,6 +39,7 @@ import funkin.graphics.FunkinSprite;
 import funkin.input.Cursor;
 import funkin.input.TurboButtonHandler;
 import funkin.input.TurboKeyHandler;
+import funkin.modding.events.ScriptEventDispatcher;
 import funkin.modding.events.ScriptEvent;
 import funkin.play.event.SongEvent;
 import funkin.play.notes.notekind.NoteKindManager;
@@ -7245,7 +7246,7 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
    */
   var _scriptNoteObj:NoteSprite = null;
 
-  var _noteScriptEvent:NoteScriptEvent = null;
+  var _noteScriptEvent:HitNoteScriptEvent = null;
   var _currentEvents = null;
   var _allowedEvents = null;
   var _eventTarget:Null<CharacterPlayer> = null;
@@ -7277,7 +7278,16 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       _scriptNoteObj.direction = _scriptNoteObj.noteData?.getDirection() ?? 0;
       _scriptNoteObj.scrollFactor.set();
 
-      _noteScriptEvent = new HitNoteScriptEvent(_scriptNoteObj, 0.0, 0, (noteData.getStrumlineIndex() == 0 ? 'perfect' : 'sick'), false, 0);
+      _noteScriptEvent = ScriptEventDispatcher.recycleEvent(HitNoteScriptEvent, NOTE_HIT, true);
+      @:bypassAccessor _noteScriptEvent.note = _scriptNoteObj;
+      _noteScriptEvent.healthChange = 0.0;
+      _noteScriptEvent.score = 0;
+      _noteScriptEvent.judgement = (noteData.getStrumlineIndex() == 0 ? 'perfect' : 'sick');
+      _noteScriptEvent.isComboBreak = false;
+      @:bypassAccessor _noteScriptEvent.comboCount = 0;
+      _noteScriptEvent.hitDiff = 0;
+      _noteScriptEvent.doesNotesplash = false;
+
       dispatchEvent(_noteScriptEvent);
 
       // Calling event.cancelEvent() skips all the other logic! Neat!
@@ -7304,7 +7314,6 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
     _scriptNoteObj?.destroy();
     _scriptNoteObj = null;
 
-    _noteScriptEvent = null;
     for (data in _allowedEvents)
     {
       switch (data.eventKind)
