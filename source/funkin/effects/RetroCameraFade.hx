@@ -4,6 +4,10 @@ import flixel.util.FlxTimer;
 import flixel.FlxCamera;
 import openfl.filters.ColorMatrixFilter;
 
+/**
+ * A class that is used for creating a retro-styled fading effect.
+ * This class is used primarily in Week 6.
+ */
 @:nullSafety
 class RetroCameraFade
 {
