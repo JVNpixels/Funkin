@@ -7279,12 +7279,12 @@ class ChartEditorState extends UIState // UIState derives from MusicBeatState
       _scriptNoteObj.scrollFactor.set();
 
       _noteScriptEvent = ScriptEventDispatcher.recycleEvent(HitNoteScriptEvent, NOTE_HIT, true);
-      @:bypassAccessor _noteScriptEvent.note = _scriptNoteObj;
+      _noteScriptEvent.note = _scriptNoteObj;
       _noteScriptEvent.healthChange = 0.0;
       _noteScriptEvent.score = 0;
       _noteScriptEvent.judgement = (noteData.getStrumlineIndex() == 0 ? 'perfect' : 'sick');
       _noteScriptEvent.isComboBreak = false;
-      @:bypassAccessor _noteScriptEvent.comboCount = 0;
+      _noteScriptEvent.comboCount = 0;
       _noteScriptEvent.hitDiff = 0;
       _noteScriptEvent.doesNotesplash = false;
 

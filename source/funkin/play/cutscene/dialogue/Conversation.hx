@@ -195,7 +195,7 @@ class Conversation extends FlxSpriteGroup implements IDialogueScriptedClass impl
     super.update(elapsed);
 
     var event:UpdateScriptEvent = ScriptEventDispatcher.recycleEvent(UpdateScriptEvent, UPDATE);
-    @:bypassAccessor event.elapsed = elapsed;
+    event.elapsed = elapsed;
     dispatchEvent(event);
   }
 
@@ -310,14 +310,14 @@ class Conversation extends FlxSpriteGroup implements IDialogueScriptedClass impl
   public function startConversation():Void
   {
     var event:DialogueScriptEvent = ScriptEventDispatcher.recycleEvent(DialogueScriptEvent, DIALOGUE_START);
-    @:bypassAccessor event.conversation = this;
+    event.conversation = this;
     dispatchEvent(event);
   }
 
   public function endConversation():Void
   {
     var event:DialogueScriptEvent = ScriptEventDispatcher.recycleEvent(DialogueScriptEvent, DIALOGUE_END);
-    @:bypassAccessor event.conversation = this;
+    event.conversation = this;
     dispatchEvent(event);
   }
 
@@ -416,7 +416,7 @@ class Conversation extends FlxSpriteGroup implements IDialogueScriptedClass impl
   public function skipConversation():Void
   {
     var event:DialogueScriptEvent = ScriptEventDispatcher.recycleEvent(DialogueScriptEvent, DIALOGUE_SKIP, true);
-    @:bypassAccessor event.conversation = this;
+    event.conversation = this;
     dispatchEvent(event);
   }
 

@@ -856,7 +856,7 @@ class CharSelectSubState extends MusicBeatSubState
         cursors.unconfirm();
 
         var event:CharacterSelectScriptEvent = ScriptEventDispatcher.recycleEvent(CharacterSelectScriptEvent, CHARACTER_DESELECTED);
-        @:bypassAccessor event.characterId = curChar;
+        event.characterId = curChar;
         dispatchEvent(event);
 
         #if FEATURE_TOUCH_CONTROLS
@@ -897,7 +897,7 @@ class CharSelectSubState extends MusicBeatSubState
         FunkinSound.playOnce(Paths.sound('CS_confirm'));
 
         var event:CharacterSelectScriptEvent = ScriptEventDispatcher.recycleEvent(CharacterSelectScriptEvent, CHARACTER_CONFIRMED);
-        @:bypassAccessor event.characterId = curChar;
+        event.characterId = curChar;
         dispatchEvent(event);
 
         #if FEATURE_TOUCH_CONTROLS
@@ -1170,7 +1170,7 @@ class CharSelectSubState extends MusicBeatSubState
       staticSound.stop();
 
     var event:CharacterSelectScriptEvent = ScriptEventDispatcher.recycleEvent(CharacterSelectScriptEvent, CHARACTER_SELECTED);
-    @:bypassAccessor event.characterId = curChar;
+    event.characterId = curChar;
     dispatchEvent(event);
 
     nametag.switchChar(value);

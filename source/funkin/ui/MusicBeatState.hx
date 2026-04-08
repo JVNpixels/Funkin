@@ -174,7 +174,7 @@ class MusicBeatState extends FlxTransitionableState implements IEventHandler
     super.update(elapsed);
 
     var event:UpdateScriptEvent = ScriptEventDispatcher.recycleEvent(UpdateScriptEvent, UPDATE);
-    @:bypassAccessor event.elapsed = elapsed;
+    event.elapsed = elapsed;
     dispatchEvent(event);
   }
 
@@ -230,8 +230,8 @@ class MusicBeatState extends FlxTransitionableState implements IEventHandler
     if (this.subState != null && !persistentUpdate) return false;
 
     var event:SongTimeScriptEvent = ScriptEventDispatcher.recycleEvent(SongTimeScriptEvent, SONG_STEP_HIT, true);
-    @:bypassAccessor event.beat = conductorInUse.currentBeat;
-    @:bypassAccessor event.step = conductorInUse.currentStep;
+    event.beat = conductorInUse.currentBeat;
+    event.step = conductorInUse.currentStep;
     dispatchEvent(event);
 
     if (event.eventCanceled) return false;
@@ -244,8 +244,8 @@ class MusicBeatState extends FlxTransitionableState implements IEventHandler
     if (this.subState != null && !persistentUpdate) return false;
 
     var event:SongTimeScriptEvent = ScriptEventDispatcher.recycleEvent(SongTimeScriptEvent, SONG_BEAT_HIT, true);
-    @:bypassAccessor event.beat = conductorInUse.currentBeat;
-    @:bypassAccessor event.step = conductorInUse.currentStep;
+    event.beat = conductorInUse.currentBeat;
+    event.step = conductorInUse.currentStep;
     dispatchEvent(event);
 
     if (event.eventCanceled) return false;
@@ -266,7 +266,7 @@ class MusicBeatState extends FlxTransitionableState implements IEventHandler
   override function startOutro(onComplete:() -> Void):Void
   {
     var event:StateChangeScriptEvent = ScriptEventDispatcher.recycleEvent(StateChangeScriptEvent, STATE_CHANGE_BEGIN, true);
-    @:bypassAccessor event.targetState = null;
+    event.targetState = null;
 
     dispatchEvent(event);
 
@@ -285,7 +285,7 @@ class MusicBeatState extends FlxTransitionableState implements IEventHandler
   override public function openSubState(targetSubState:FlxSubState):Void
   {
     var event:SubStateScriptEvent = ScriptEventDispatcher.recycleEvent(SubStateScriptEvent, SUBSTATE_OPEN_BEGIN, true);
-    @:bypassAccessor event.targetState = targetSubState;
+    event.targetState = targetSubState;
     dispatchEvent(event);
 
     dispatchEvent(event);
@@ -298,14 +298,14 @@ class MusicBeatState extends FlxTransitionableState implements IEventHandler
   function onOpenSubStateComplete(targetState:FlxSubState):Void
   {
     var event:SubStateScriptEvent = ScriptEventDispatcher.recycleEvent(SubStateScriptEvent, SUBSTATE_OPEN_END);
-    @:bypassAccessor event.targetState = targetState;
+    event.targetState = targetState;
     dispatchEvent(event);
   }
 
   override public function closeSubState():Void
   {
     var event:SubStateScriptEvent = ScriptEventDispatcher.recycleEvent(SubStateScriptEvent, SUBSTATE_CLOSE_BEGIN, true);
-    @:bypassAccessor event.targetState = this.subState;
+    event.targetState = this.subState;
     dispatchEvent(event);
 
     if (event.eventCanceled) return;
@@ -316,7 +316,7 @@ class MusicBeatState extends FlxTransitionableState implements IEventHandler
   function onCloseSubStateComplete(targetState:FlxSubState):Void
   {
     var event:SubStateScriptEvent = ScriptEventDispatcher.recycleEvent(SubStateScriptEvent, SUBSTATE_CLOSE_END);
-    @:bypassAccessor event.targetState = targetState;
+    event.targetState = targetState;
     dispatchEvent(event);
   }
 }

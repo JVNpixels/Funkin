@@ -120,7 +120,7 @@ class Countdown
     }
 
     var event:CountdownScriptEvent = ScriptEventDispatcher.recycleEvent(CountdownScriptEvent, type, (index != AFTER));
-    @:bypassAccessor event.step = index;
+    event.step = index;
 
     // Modules, stages, characters.
     @:privateAccess

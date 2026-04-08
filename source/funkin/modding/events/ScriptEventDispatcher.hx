@@ -39,11 +39,10 @@ class ScriptEventDispatcher
       eventPool.push(result);
     }
 
-    @:bypassAccessor result.eventCanceled = false;
-    @:bypassAccessor result.shouldPropagate = true;
-
-    @:bypassAccessor result.type = type;
-    @:bypassAccessor result.cancelable = cancelable;
+    result.eventCanceled = false;
+    result.shouldPropagate = true;
+    result.type = type;
+    result.cancelable = cancelable;
 
     return result;
   }

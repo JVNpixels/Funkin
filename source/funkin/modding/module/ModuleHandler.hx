@@ -58,7 +58,7 @@ class ModuleHandler
   static function onStateSwitchComplete():Void
   {
     var event:StateChangeScriptEvent = ScriptEventDispatcher.recycleEvent(StateChangeScriptEvent, STATE_CHANGE_END, true);
-    @:bypassAccessor event.targetState = FlxG.state;
+    event.targetState = FlxG.state;
     callEvent(event);
   }
 

@@ -1045,7 +1045,7 @@ class PlayState extends MusicBeatSubState
       prevScrollTargets = [];
 
       var retryEvent:SongRetryEvent = ScriptEventDispatcher.recycleEvent(SongRetryEvent, SONG_RETRY);
-      @:bypassAccessor retryEvent.difficulty = currentDifficulty;
+      retryEvent.difficulty = currentDifficulty;
 
       previousDifficulty = currentDifficulty;
 
@@ -1499,7 +1499,7 @@ class PlayState extends MusicBeatSubState
           };
 
           var eventEvent:SongEventScriptEvent = ScriptEventDispatcher.recycleEvent(SongEventScriptEvent, SONG_EVENT, true);
-          @:bypassAccessor eventEvent.eventData = event;
+          eventEvent.eventData = event;
           dispatchEvent(eventEvent);
 
           // Calling event.cancelEvent() skips the event. Neat!
@@ -2516,10 +2516,10 @@ class PlayState extends MusicBeatSubState
     Highscore.tallies = new Tallies();
 
     var event:SongLoadScriptEvent = ScriptEventDispatcher.recycleEvent(SongLoadScriptEvent, SONG_LOADED);
-    @:bypassAccessor event.id = this.currentChart?.song?.id ?? 'Unknown';
-    @:bypassAccessor event.difficulty = this.currentChart?.difficulty ?? Constants.DEFAULT_DIFFICULTY;
-    @:bypassAccessor event.notes = this.currentChart?.notes?.copy() ?? [];
-    @:bypassAccessor event.events = this.currentChart?.getEvents() ?? [];
+    event.id = this.currentChart?.song?.id ?? 'Unknown';
+    event.difficulty = this.currentChart?.difficulty ?? Constants.DEFAULT_DIFFICULTY;
+    event.notes = this.currentChart?.notes?.copy() ?? [];
+    event.events = this.currentChart?.getEvents() ?? [];
     dispatchEvent(event);
 
     var builtNoteData:Array<SongNoteData> = event.notes;
@@ -2567,9 +2567,9 @@ class PlayState extends MusicBeatSubState
   function onStrumlineNoteIncoming(noteSprite:NoteSprite):Void
   {
     var event:NoteScriptEvent = ScriptEventDispatcher.recycleEvent(NoteScriptEvent, NOTE_INCOMING);
-    @:bypassAccessor event.note = noteSprite;
+    event.note = noteSprite;
     event.healthChange = 0;
-    @:bypassAccessor event.comboCount = 0;
+    event.comboCount = 0;
 
     dispatchEvent(event);
   }
@@ -2814,12 +2814,12 @@ class PlayState extends MusicBeatSubState
       if (r.botplayHit)
       {
         var event:HitNoteScriptEvent = ScriptEventDispatcher.recycleEvent(HitNoteScriptEvent, NOTE_HIT, true);
-        @:bypassAccessor event.note = note;
+        event.note = note;
         event.healthChange = 0.0;
         event.score = 0;
         event.judgement = 'perfect';
         event.isComboBreak = false;
-        @:bypassAccessor event.comboCount = 0;
+        event.comboCount = 0;
         event.hitDiff = 0;
         event.doesNotesplash = false;
         dispatchEvent(event);
@@ -2890,12 +2890,12 @@ class PlayState extends MusicBeatSubState
         // Call an event to allow canceling the note hit.
         // NOTE: This is what handles the character animations!
         var event:HitNoteScriptEvent = ScriptEventDispatcher.recycleEvent(HitNoteScriptEvent, NOTE_HIT, true);
-        @:bypassAccessor event.note = note;
+        event.note = note;
         event.healthChange = 0.0;
         event.score = 0;
         event.judgement = 'perfect';
         event.isComboBreak = false;
-        @:bypassAccessor event.comboCount = 0;
+        event.comboCount = 0;
         event.hitDiff = 0;
         event.doesNotesplash = false;
         dispatchEvent(event);
@@ -2921,9 +2921,9 @@ class PlayState extends MusicBeatSubState
         // Call an event to allow canceling the note miss.
         // NOTE: This is what handles the character animations!
         var event:NoteScriptEvent = ScriptEventDispatcher.recycleEvent(NoteScriptEvent, NOTE_MISS, true);
-        @:bypassAccessor event.note = note;
+        event.note = note;
         event.healthChange = Constants.HEALTH_MISS_PENALTY;
-        @:bypassAccessor event.comboCount = Highscore.tallies.combo;
+        event.comboCount = Highscore.tallies.combo;
         dispatchEvent(event);
 
         // Calling event.cancelEvent() skips all the other logic! Neat!
@@ -2991,12 +2991,12 @@ class PlayState extends MusicBeatSubState
             var scoreChange:Float = Constants.SCORE_HOLD_DROP_PENALTY_PER_SECOND * remainingLengthSec;
 
             var event:HoldNoteScriptEvent = ScriptEventDispatcher.recycleEvent(HoldNoteScriptEvent, NOTE_HOLD_DROP, true);
-            @:bypassAccessor event.holdNote = holdNote;
-            @:bypassAccessor event.note = null;
+            event.holdNote = holdNote;
+            event.note = null;
             event.healthChange = healthChange;
             event.score = scoreChange;
             event.isComboBreak = true;
-            @:bypassAccessor event.comboCount = Highscore.tallies.combo;
+            event.comboCount = Highscore.tallies.combo;
             event.hitDiff = 0;
             event.doesNotesplash = false;
             dispatchEvent(event);
@@ -3180,12 +3180,12 @@ class PlayState extends MusicBeatSubState
 
     // Send the note hit event.
     var event:HitNoteScriptEvent = ScriptEventDispatcher.recycleEvent(HitNoteScriptEvent, NOTE_HIT, true);
-    @:bypassAccessor event.note = note;
+    event.note = note;
     event.healthChange = healthChange;
     event.score = score;
     event.judgement = daRating;
     event.isComboBreak = isComboBreak;
-    @:bypassAccessor event.comboCount = (note.scoreable ? Highscore.tallies.combo + 1 : Highscore.tallies.combo);
+    event.comboCount = (note.scoreable ? Highscore.tallies.combo + 1 : Highscore.tallies.combo);
     event.hitDiff = noteDiff;
     event.doesNotesplash = (daRating == 'sick');
     dispatchEvent(event);
@@ -3252,8 +3252,8 @@ class PlayState extends MusicBeatSubState
   function ghostNoteMiss(direction:NoteDirection, hasPossibleNotes:Bool = true):Void
   {
     var event:GhostMissNoteScriptEvent = ScriptEventDispatcher.recycleEvent(GhostMissNoteScriptEvent, NOTE_GHOST_MISS, true);
-    @:bypassAccessor event.dir = direction; // Direction missed in.
-    @:bypassAccessor event.hasPossibleNotes = hasPossibleNotes; // Whether there was a note you could have hit.
+    event.dir = direction; // Direction missed in.
+    event.hasPossibleNotes = hasPossibleNotes; // Whether there was a note you could have hit.
     event.healthChange = Constants.HEALTH_GHOST_MISS_PENALTY; // How much health to add (negative)
     event.scoreChange = Constants.SCORE_GHOST_MISS_PENALTY; // Amount of score to add (negative).
     event.playSound = true;

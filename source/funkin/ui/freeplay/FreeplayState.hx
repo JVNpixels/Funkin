@@ -1012,9 +1012,9 @@ class FreeplayState extends MusicBeatSubState
     refreshCapsuleDisplays();
 
     var event:CapsuleScriptEvent = ScriptEventDispatcher.recycleEvent(CapsuleScriptEvent, DIFFICULTY_SWITCH);
-    @:bypassAccessor event.capsule = currentCapsule;
-    @:bypassAccessor event.difficultyId = currentDifficulty;
-    @:bypassAccessor event.variationId = currentVariation;
+    event.capsule = currentCapsule;
+    event.difficultyId = currentDifficulty;
+    event.variationId = currentVariation;
     dispatchEvent(event);
   }
 
@@ -2746,9 +2746,9 @@ class FreeplayState extends MusicBeatSubState
     uiStateMachine.transition(Exiting);
 
     var event:CapsuleScriptEvent = ScriptEventDispatcher.recycleEvent(CapsuleScriptEvent, SONG_SELECTED);
-    @:bypassAccessor event.capsule = currentCapsule;
-    @:bypassAccessor event.difficultyId = currentDifficulty;
-    @:bypassAccessor event.variationId = currentVariation;
+    event.capsule = currentCapsule;
+    event.difficultyId = currentDifficulty;
+    event.variationId = currentVariation;
     dispatchEvent(event);
 
     PlayStatePlaylist.isStoryMode = false;
@@ -2980,9 +2980,9 @@ class FreeplayState extends MusicBeatSubState
     if (change != 0) HapticUtil.vibrate(0, 0.01, 0.5);
 
     var event:CapsuleScriptEvent = ScriptEventDispatcher.recycleEvent(CapsuleScriptEvent, CAPSULE_SELECTED);
-    @:bypassAccessor event.capsule = currentCapsule;
-    @:bypassAccessor event.difficultyId = currentDifficulty;
-    @:bypassAccessor event.variationId = currentVariation;
+    event.capsule = currentCapsule;
+    event.difficultyId = currentDifficulty;
+    event.variationId = currentVariation;
     dispatchEvent(event);
   }
 
