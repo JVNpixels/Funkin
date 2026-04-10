@@ -16,7 +16,6 @@ class FunkinSoundTray extends FlxSoundTray
   var graphicScale:Float = 0.30;
   var lerpYPos:Float = 0;
   var alphaTarget:Float = 0;
-
   var volumeMaxSound:String;
 
   public function new()

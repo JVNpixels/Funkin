@@ -61,7 +61,7 @@ class CharacterPlayer extends Box
 
   function get_charName():String
   {
-    return character?.characterName ?? "Unknown";
+    return character?.characterName ?? 'Unknown';
   }
 
   // possible haxeui bug: if listener is added after event is dispatched, event is "lost"... is it smart to "collect and redispatch"? Not sure
@@ -270,11 +270,10 @@ class CharacterPlayer extends Box
   }
 }
 
-@:access(funkin.ui.haxeui.components.CharacterPlayer)
-@:access(funkin.play.character.BaseCharacter)
+@:access(funkin.ui.haxeui.components.CharacterPlayer) @:access(funkin.play.character.BaseCharacter)
 private class Layout extends DefaultLayout
 {
-  public override function resizeChildren():Void
+  override public function resizeChildren():Void
   {
     super.resizeChildren();
 
@@ -288,7 +287,7 @@ private class Layout extends DefaultLayout
     character.cornerPosition.set(0, 0);
   }
 
-  public override function calcAutoSize(exclusions:Array<Component> = null):Size
+  override public function calcAutoSize(?exclusions:Array<Component>):Size
   {
     var player:CharacterPlayer = cast(_component, CharacterPlayer);
     var character:BaseCharacter = player.character;

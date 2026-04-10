@@ -85,29 +85,10 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
   }
 
   // this returns false so that any new song can override this and return true when needed
+
   public function isSongNew(currentDifficulty:String, currentVariation:String):Bool
   {
     return false;
-  }
-
-  /**
-   * The start time of this song's preview in Freeplay (in range 0 - 1)
-   */
-  public var previewStartTime(get, never):Float;
-
-  function get_previewStartTime():Float
-  {
-    return _data?.playData?.previewStart ?? 0;
-  }
-
-  /**
-   * The end time of this song's preview in Freeplay (in range 0 - 1)
-   */
-  public var previewEndTime(get, never):Float;
-
-  function get_previewEndTime():Float
-  {
-    return _data?.playData?.previewEnd ?? 0.2;
   }
 
   /**
@@ -166,7 +147,9 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
 
     _data = _fetchData(id);
 
-    _metadata = _data == null ? [] : [Constants.DEFAULT_VARIATION => _data];
+    _metadata = _data == null ? [] : [
+      Constants.DEFAULT_VARIATION => _data
+    ];
 
     if (_data != null && _data.playData != null)
     {
@@ -643,6 +626,11 @@ class Song implements IPlayStateScriptedClass implements IRegistryEntry<SongMeta
     }
   }
 
+  public function isDiscordRPCAnonymous():Bool
+  {
+    return false;
+  }
+
   public function onPause(event:PauseScriptEvent):Void
   {
   };
@@ -801,15 +789,11 @@ class SongDifficulty
   public var looped:Bool = false;
   public var offsets:SongOffsets = new SongOffsets();
   public var generatedBy:String = SongRegistry.DEFAULT_GENERATEDBY;
-
   public var timeChanges:Array<SongTimeChange> = [];
-
   public var stage:String = Constants.DEFAULT_STAGE;
   public var noteStyle:String = Constants.DEFAULT_NOTE_STYLE;
   public var characters:SongCharacterData = null;
-
   public var scrollSpeed:Float = Constants.DEFAULT_SCROLLSPEED;
-
   public var difficultyRating:Int = 0;
   public var album:Null<String> = null;
   public var stickerPack:Null<String> = null;

@@ -18,7 +18,7 @@
       "name": "extension-admob",
       "type": "git",
       "dir": null,
-      "ref": "ab0c9523761072c6a61fd9fdff248a9bb7b8b4c5",
+      "ref": "5c908b3f7c74115a8b52eddf1e05525f4873f26e",
       "url": "https://github.com/FunkinCrew/extension-admob"
     },
     {
@@ -52,7 +52,7 @@
       "name": "flixel",
       "type": "git",
       "dir": null,
-      "ref": "f7b94eebf7dbb452a929d0c67ab31a9cbd71d3a0",
+      "ref": "622bb65e7f49f0e1a03826b6593369d3ad5e54fa",
       "url": "https://github.com/FunkinCrew/flixel"
     },
     {
@@ -72,7 +72,7 @@
     {
       "name": "format",
       "type": "haxelib",
-      "version": "3.5.0"
+      "version": "3.8.0"
     },
     {
       "name": "funkin.vis",
@@ -87,6 +87,11 @@
       "dir": "src",
       "ref": "6409f3c6d1b4c52176813d3ede86c0d34e8af2c1",
       "url": "https://github.com/FunkinCrew/grig.audio"
+    },
+    {
+      "name": "tink_core",
+      "type": "haxelib",
+      "version": "1.26.0"
     },
     {
       "name": "hamcrest",
@@ -111,7 +116,7 @@
       "name": "hxcpp",
       "type": "git",
       "dir": null,
-      "ref": "450d112e50acff57b1bc9d584dcf1374c9e33995",
+      "ref": "72769df047b3f9f598d7bb3c4701e24ac715d416",
       "url": "https://github.com/FunkinCrew/hxcpp"
     },
     {
@@ -169,7 +174,7 @@
       "name": "lime",
       "type": "git",
       "dir": null,
-      "ref": "4f1947423858042f11e49e9045d3d8583c483bcb",
+      "ref": "69109037bf9e31c7b6f6cf9679a5f67f5e5f3a50",
       "url": "https://github.com/FunkinCrew/lime"
     },
     {
@@ -183,7 +188,7 @@
       "name": "openfl",
       "type": "git",
       "dir": null,
-      "ref": "88534506595a32c3f02b21b3987e789a24074ae7",
+      "ref": "aa7209d704d40b4c44b9a72593dc59496854da4c",
       "url": "https://github.com/FunkinCrew/openfl"
     },
     {

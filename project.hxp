@@ -32,13 +32,13 @@ class Project extends HXProject
    * REMEMBER TO CHANGE THIS WHEN THE GAME UPDATES!
    * You only have to change it here, the rest of the game will query this value.
    */
-  static final VERSION:String = "0.8.3";
+  static final VERSION:String = "0.8.5";
 
   /**
    * The build's number and version code.
    * Used when publishing the game to mobile app stores. Should increment with each patch.
    */
-  static final BUILD_NUMBER:Int = 77;
+  static final BUILD_NUMBER:Int = 87;
 
   /**
    * The game's name. Used as the default window title.
@@ -906,13 +906,13 @@ class Project extends HXProject
     // Should be true except on web builds (some asset stuff breaks it)
     FEATURE_LAG_ADJUSTMENT.apply(this, !isWeb());
 
-    // Should be true except on web and mobile builds.
-    // Screenshots doesn't work there, and mobile has its own screenshots anyway.
-    FEATURE_SCREENSHOTS.apply(this, !(isWeb() || isMobile()));
+    // Should be true only on Desktop builds.
+    // Mobile has its own screenshot methods.
+    // Web has it disabled due to performance cost of `preserveDrawingBuffer`.
+    FEATURE_SCREENSHOTS.apply(this, isDesktop());
 
-    // Should be true except on MacOS and mobile builds.
-    // Dragging and dropping files onto the window doesn't work there.
-    FEATURE_FILE_DROP.apply(this, !(isMac() || isMobile()));
+    // Should be true except on mobile builds.
+    FEATURE_FILE_DROP.apply(this, !isMobile());
 
     // Audio context issues only exist on web builds.
     FEATURE_TOUCH_HERE_TO_PLAY.apply(this, isWeb());

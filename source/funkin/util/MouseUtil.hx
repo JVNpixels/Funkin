@@ -39,8 +39,13 @@ class MouseUtil
     }
   }
 
+  static final MOUSE_ZOOM_DEFAULT_INTENSITY:Float = 0.1;
+
   /**
    * Increment the zoom level of the current camera by the mouse wheel scroll value.
+   *
+   * @param intensityMult The intensity multiplier, defaults to 0.1
+   * @param customWheel If specified, use a custom override value for the scroll wheel.
    */
   public static function mouseWheelZoom():Void
   {
