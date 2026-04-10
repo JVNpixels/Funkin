@@ -63,6 +63,9 @@ class DebugMenuSubState extends MusicBeatSubState
     #if FEATURE_STAGE_EDITOR
     createItem("STAGE EDITOR", openStageEditor);
     #end
+    #if FEATURE_LEVEL_EDITOR
+    createItem("LEVEL EDITOR", openLevelEditor);
+    #end
     #if FEATURE_RESULTS_DEBUG
     createItem("RESULTS SCREEN DEBUG", openTestResultsScreen);
     #end
@@ -136,6 +139,14 @@ class DebugMenuSubState extends MusicBeatSubState
   {
     trace('Stage Editor');
     FlxG.switchState(() -> new funkin.ui.debug.stageeditor.StageEditorState());
+  }
+  #end
+
+  #if FEATURE_LEVEL_EDITOR
+  function openLevelEditor():Void
+  {
+    FlxG.switchState(() -> new funkin.ui.debug.leveleditor.LevelEditorState());
+    trace('Level Editor');
   }
   #end
 
