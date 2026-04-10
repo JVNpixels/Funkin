@@ -506,7 +506,7 @@ class LevelEditorState extends MusicBeatState
   {
     for (prop in levelProps.members)
     {
-      if (prop.hasAnimation('idle')) prop.dance();
+      if (prop.hasAnimation('idle') || (prop.hasAnimation('danceLeft') && prop.hasAnimation('danceRight'))) prop.dance();
     }
 
     return super.beatHit();
