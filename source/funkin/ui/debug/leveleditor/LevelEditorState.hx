@@ -1,5 +1,6 @@
 package funkin.ui.debug.leveleditor;
 
+#if FEATURE_LEVEL_EDITOR
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -32,6 +33,7 @@ import funkin.util.SwipeUtil;
 import funkin.util.TouchUtil;
 import funkin.ui.FullScreenScaleMode;
 import funkin.input.Cursor;
+import funkin.ui.debug.leveleditor.components.*;
 #if FEATURE_DISCORD_RPC
 import funkin.api.discord.DiscordClient;
 #end
@@ -42,7 +44,7 @@ class LevelEditorState extends MusicBeatState
   static final BACKGROUND_HEIGHT:Int = 400;
 
   var currentDifficultyId:String = 'normal';
-  var currentLevelId:String = 'tutorial';
+  public var currentLevelId:String = 'tutorial';
   var currentLevel:Level;
   var isLevelUnlocked:Bool;
   var currentLevelTitle:LevelTitle;
@@ -102,13 +104,17 @@ class LevelEditorState extends MusicBeatState
   /**
    * List of available level IDs.
    */
-  var levelList:Array<String> = [];
+  public var levelList:Array<String> = [];
 
   var difficultySprites:Map<String, FlxSprite>;
   var stickerSubState:StickerSubState;
 
   static var rememberedLevelId:Null<String> = null;
   static var rememberedDifficulty:Null<String> = Constants.DEFAULT_DIFFICULTY;
+
+  public var welcomeDialog:WelcomeDialog;
+
+  var levelTitleItem:LevelTitle;
 
   public function new(?stickers:StickerSubState = null)
   {
@@ -144,9 +150,7 @@ class LevelEditorState extends MusicBeatState
 
     persistentUpdate = persistentDraw = true;
 
-    rememberSelection();
-
-    updateData();
+    updateDataInitial();
 
     levelTitles = new FlxTypedGroup<LevelTitle>();
     levelTitles.zIndex = 15;
@@ -182,8 +186,6 @@ class LevelEditorState extends MusicBeatState
     levelTitleText.zIndex = 1000;
     add(levelTitleText);
 
-    buildLevelTitles();
-
     final useNotch:Bool = Math.max(35, FullScreenScaleMode.gameNotchSize.x) != 35;
     leftDifficultyArrow = new FlxSprite(FlxG.width - (useNotch ? (FullScreenScaleMode.gameNotchSize.x) + 410 : 410), 480);
     leftDifficultyArrow.frames = Paths.getSparrowAtlas('storymenu/ui/arrows');
@@ -214,13 +216,26 @@ class LevelEditorState extends MusicBeatState
       startingVolume: 0.0
     });
     FlxG.sound.music.fadeIn(10, 0, 1);
+
+    welcomeDialog = new WelcomeDialog(this);
+    welcomeDialog.showDialog();
   }
 
-  function updateData():Void
+  public function updateDataInitial():Void
   {
     currentLevel = LevelRegistry.instance.fetchEntry(currentLevelId);
     if (currentLevel == null) throw 'Could not fetch data for level: ${currentLevelId}';
     isLevelUnlocked = currentLevel == null ? false : currentLevel.isUnlocked();
+  }
+
+  public function updateData():Void
+  {
+    currentLevel = LevelRegistry.instance.fetchEntry(currentLevelId);
+    if (currentLevel == null) throw 'Could not fetch data for level: ${currentLevelId}';
+    isLevelUnlocked = currentLevel == null ? false : currentLevel.isUnlocked();
+    updateBackground();
+    updateProps();
+    updateText();
   }
 
   function buildDifficultySprite(?diff:String):Void
@@ -257,25 +272,6 @@ class LevelEditorState extends MusicBeatState
     add(difficultySprite);
   }
 
-  function buildLevelTitles():Void
-  {
-    levelTitles.clear();
-
-    for (levelIndex in 0...levelList.length)
-    {
-      var levelId:String = levelList[levelIndex];
-      var level:Level = LevelRegistry.instance.fetchEntry(levelId);
-      if (level == null || !level.isVisible()) continue;
-
-      // TODO: Readd lock icon if unlocked is false.
-
-      var levelTitleItem:LevelTitle = new LevelTitle(0, Std.int(levelBackground.y + levelBackground.height + 10), level);
-      levelTitleItem.targetY = ((levelTitleItem.height + 20) * levelIndex);
-      levelTitleItem.screenCenter(X);
-      levelTitles.add(levelTitleItem);
-    }
-  }
-
   override function update(elapsed:Float):Void
   {
     Conductor.instance.update();
@@ -296,7 +292,28 @@ class LevelEditorState extends MusicBeatState
       FlxG.sound.music.volume += 0.5 * elapsed;
     }
 
+    if (pressingControl() && FlxG.keys.justPressed.N)
+    {
+        welcomeDialog = new WelcomeDialog(this);
+        welcomeDialog.showDialog();
+        welcomeDialog.closable = true;
+    }
+
     super.update(elapsed);
+  }
+
+  /**
+   * Small helper for MacOS, "WINDOWS" is keycode 15, which maps to "COMMAND" on Mac, which is more often used than "CONTROL"
+   * Everywhere else, it just returns `FlxG.keys.pressed.CONTROL`
+   * @return Bool
+   */
+  function pressingControl():Bool
+  {
+    #if mac
+    return FlxG.keys.pressed.WINDOWS;
+    #else
+    return FlxG.keys.pressed.CONTROL;
+    #end
   }
 
   function handleKeyPresses():Void
@@ -351,8 +368,6 @@ class LevelEditorState extends MusicBeatState
     var previousLevelId:String = currentLevelId;
     currentLevelId = levelList[currentIndex];
     rememberedLevelId = currentLevelId;
-
-    updateData();
 
     for (index in 0...levelTitles.members.length)
     {
@@ -420,9 +435,8 @@ class LevelEditorState extends MusicBeatState
       // funnyMusicThing();
     }
 
-    scoreText.text = 'LEVEL SCORE: ${FlxStringUtil.formatMoney(FlxG.random.int(0, 1234567), false, true)}';
+    scoreText.text = 'LEVEL SCORE: 0';
 
-    updateText();
     refresh();
   }
 
@@ -446,55 +460,6 @@ class LevelEditorState extends MusicBeatState
       levelBackground.alpha = 1.0; // Not hidden.
       add(levelBackground);
     }
-    else
-    {
-      var previousLevel = LevelRegistry.instance.fetchEntry(previousLevelId);
-
-      if (currentLevel.isBackgroundSimple() && previousLevel.isBackgroundSimple())
-      {
-        var previousColor:FlxColor = previousLevel.getBackgroundColor();
-        var currentColor:FlxColor = currentLevel.getBackgroundColor();
-        if (previousColor != currentColor)
-        {
-          // Both the previous and current level were simple backgrounds.
-          // Fade between colors directly, rather than fading one background out and another in.
-          // cancels potential tween in progress, and tweens from there
-          FlxTween.cancelTweensOf(levelBackground);
-          FlxTween.color(levelBackground, 0.9, levelBackground.color, currentColor, {ease: FlxEase.quartOut});
-        }
-        else
-        {
-          // Do no fade at all if the colors aren't different.
-        }
-      }
-      else
-      {
-        // Either the previous or current level has a complex background.
-        // We need to fade the old background out and the new one in.
-
-        // Reference the old background and fade it out.
-        var oldBackground:FlxSprite = levelBackground;
-        FlxTween.tween(oldBackground, {alpha: 0.0}, 0.6, {
-          ease: FlxEase.linear,
-          onComplete: function(_)
-          {
-            remove(oldBackground);
-          }
-        });
-
-        // Build a new background and fade it in.
-        levelBackground = currentLevel.buildBackground();
-        levelBackground.x = 0;
-        levelBackground.y = 56;
-        levelBackground.alpha = 0.0; // Hidden to start.
-        levelBackground.zIndex = 100;
-        add(levelBackground);
-
-        FlxTween.tween(levelBackground, {alpha: 1.0}, 0.6, {
-          ease: FlxEase.linear
-        });
-      }
-    }
   }
 
   function updateProps():Void
@@ -511,9 +476,15 @@ class LevelEditorState extends MusicBeatState
 
   function updateText():Void
   {
-    tracklistText.text = 'TRACKS\n\n';
-    tracklistText.text += 'Unknown';
-
+    if (currentLevel != null)
+    {
+      tracklistText.text = 'TRACKS\n\n';
+      tracklistText.text += currentLevel.getSongDisplayNames(currentDifficultyId).join('\n');
+    } else {
+      tracklistText.text = 'TRACKS\n\n';
+      tracklistText.text += 'Unknown';
+    }
+    
     tracklistText.screenCenter(X);
     tracklistText.x -= (FlxG.width * 0.33);
 
@@ -531,6 +502,16 @@ class LevelEditorState extends MusicBeatState
     FlxG.keys.enabled = false;
     FlxG.switchState(() -> new MainMenuState());
     FunkinSound.playOnce(Paths.sound('cancelMenu'));
+  }
+
+  override function beatHit()
+  {
+    for (prop in levelProps.members)
+    {
+      prop.dance();
+    }
+
+    return super.beatHit();
   }
 
   /**
@@ -565,3 +546,4 @@ class LevelEditorState extends MusicBeatState
     }
   }
 }
+#end

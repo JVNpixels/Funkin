@@ -73,7 +73,7 @@ class LevelTitle extends FlxSpriteGroup
     this.x += (lock.width + LOCK_PAD) / 2;
   }
 
-  function buildLevelTitle():Void
+  public function buildLevelTitle():Void
   {
     title = level.buildTitleGraphic();
     add(title);
