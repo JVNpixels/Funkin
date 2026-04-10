@@ -51,7 +51,6 @@ class LevelEditorState extends MusicBeatState
   var highScore:Int = 42069420;
   var highScoreLerp:Int = 12345678;
   var exitingMenu:Bool = false;
-  var selectedLevel:Bool = false;
   //
   // RENDER OBJECTS
   //
@@ -74,7 +73,7 @@ class LevelEditorState extends MusicBeatState
   /**
    * The titles of the levels in the middle.
    */
-  var levelTitles:FlxTypedGroup<LevelTitle>;
+  var levelTitle:FunkinSprite;
 
   /**
    * The props in the center.
@@ -151,11 +150,6 @@ class LevelEditorState extends MusicBeatState
     persistentUpdate = persistentDraw = true;
 
     updateDataInitial();
-
-    levelTitles = new FlxTypedGroup<LevelTitle>();
-    levelTitles.zIndex = 15;
-    add(levelTitles);
-
     updateBackground();
 
     var black:FunkinSprite = new FunkinSprite(levelBackground.x, 0).makeSolidColor(FlxG.width, Std.int(400 + levelBackground.y), FlxColor.BLACK);
@@ -206,7 +200,13 @@ class LevelEditorState extends MusicBeatState
 
     add(difficultySprite);
 
+    levelTitle = new FunkinSprite(0, 475);
+    levelTitle.loadGraphic(Paths.image('storymenu/titles/tutorial'));
+    levelTitle.screenCenter(X);
+    add(levelTitle);
+
     updateText();
+    updateLevelTitle();
     changeDifficulty();
     changeLevel();
     refresh();
@@ -219,6 +219,10 @@ class LevelEditorState extends MusicBeatState
 
     welcomeDialog = new WelcomeDialog(this);
     welcomeDialog.showDialog();
+    welcomeDialog.onDialogClosed = function(_)
+    {
+      welcomeDialog = null;
+    }
   }
 
   public function updateDataInitial():Void
@@ -236,6 +240,13 @@ class LevelEditorState extends MusicBeatState
     updateBackground();
     updateProps();
     updateText();
+    updateLevelTitle();
+  }
+
+  function updateLevelTitle()
+  {
+    levelTitle.loadGraphic(Paths.image(currentLevel.getTitleGraphic()));
+    levelTitle.screenCenter(X);
   }
 
   function buildDifficultySprite(?diff:String):Void
@@ -292,11 +303,15 @@ class LevelEditorState extends MusicBeatState
       FlxG.sound.music.volume += 0.5 * elapsed;
     }
 
-    if (pressingControl() && FlxG.keys.justPressed.N)
+    if (pressingControl() && FlxG.keys.justPressed.N && welcomeDialog == null)
     {
         welcomeDialog = new WelcomeDialog(this);
         welcomeDialog.showDialog();
         welcomeDialog.closable = true;
+        welcomeDialog.onDialogClosed = function(_)
+        {
+          welcomeDialog = null;
+        }
     }
 
     super.update(elapsed);
@@ -323,8 +338,6 @@ class LevelEditorState extends MusicBeatState
 
     if (!exitingMenu)
     {
-      if (!selectedLevel)
-      {
         if (controls.UI_RIGHT #if FEATURE_TOUCH_CONTROLS || TouchUtil.overlaps(rightDifficultyArrow) #end)
         {
           rightDifficultyArrow.animation.play('press');
@@ -342,12 +355,10 @@ class LevelEditorState extends MusicBeatState
         {
           leftDifficultyArrow.animation.play('idle');
         }
-      }
-
     }
 
     if (FlxG.keys.justPressed.F4) Cursor.hide();
-    if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.Q)
+    if (pressingControl() && FlxG.keys.justPressed.Q)
     {
       Cursor.hide();
       goBack();
@@ -369,24 +380,8 @@ class LevelEditorState extends MusicBeatState
     currentLevelId = levelList[currentIndex];
     rememberedLevelId = currentLevelId;
 
-    for (index in 0...levelTitles.members.length)
-    {
-      var item:LevelTitle = levelTitles.members[index];
-
-      if (index == currentIndex)
-      {
-        currentLevelTitle = item;
-        item.alpha = 1.0;
-      }
-      else
-      {
-        item.alpha = 0.6;
-      }
-    }
-
     if (currentIndex != prevIndex) FunkinSound.playOnce(Paths.sound('scrollMenu'), 0.4);
 
-    repositionTitles();
     updateText();
     updateBackground(previousLevelId);
     updateProps();
@@ -480,6 +475,9 @@ class LevelEditorState extends MusicBeatState
     {
       tracklistText.text = 'TRACKS\n\n';
       tracklistText.text += currentLevel.getSongDisplayNames(currentDifficultyId).join('\n');
+    } else if (currentLevel.getSongDisplayNames(currentDifficultyId) == null || currentLevel.getSongDisplayNames(currentDifficultyId) == []) {
+      tracklistText.text = 'TRACKS\n\n';
+      tracklistText.text += 'Unknown';
     } else {
       tracklistText.text = 'TRACKS\n\n';
       tracklistText.text += 'Unknown';
@@ -496,7 +494,7 @@ class LevelEditorState extends MusicBeatState
   function goBack():Void
   {
     @:privateAccess
-    if (exitingMenu || selectedLevel || (stickerSubState?.switchingState ?? false)) return;
+    if (exitingMenu || (stickerSubState?.switchingState ?? false)) return;
 
     exitingMenu = true;
     FlxG.keys.enabled = false;
@@ -508,42 +506,10 @@ class LevelEditorState extends MusicBeatState
   {
     for (prop in levelProps.members)
     {
-      prop.dance();
+      if (prop.hasAnimation('idle')) prop.dance();
     }
 
     return super.beatHit();
-  }
-
-  /**
-   * Reposition titles based on the currently selected one.
-   */
-  function repositionTitles()
-  {
-    var currentIndex:Int = levelList.indexOf(currentLevelId);
-
-    // The current item should be at y 480.
-    levelTitles.members[currentIndex].targetY = 480;
-
-    // Every item above it should be positioned in relation to the next item.
-    if (currentIndex > 0)
-    {
-      for (i in 0...currentIndex)
-      {
-        var itemIndex:Int = currentIndex - 1 - i;
-        var nextItem:LevelTitle = levelTitles.members[itemIndex + 1];
-        levelTitles.members[itemIndex].targetY = nextItem.targetY - Math.max(levelTitles.members[itemIndex].height + 20, 125);
-      }
-    }
-
-    // Every item below it should be positioned in relation to the previous item.
-    if (currentIndex < levelTitles.members.length - 1)
-    {
-      for (i in (currentIndex + 1)...levelTitles.members.length)
-      {
-        var previousItem:LevelTitle = levelTitles.members[i - 1];
-        levelTitles.members[i].targetY = previousItem.targetY + (previousItem.height + 20);
-      }
-    }
   }
 }
 #end

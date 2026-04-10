@@ -75,6 +75,15 @@ class Level implements IRegistryEntry<LevelData>
   }
 
   /**
+   * Retrieve the title graphic string of a level.
+   * @return Title graphic string of the level.
+   */
+  public function getTitleGraphic():String
+  {
+    return _data.titleAsset;
+  }
+
+  /**
    * Get the list of songs in this level, as an array of names, for display on the menu.
    * @param difficulty The difficulty of the level being displayed
    * @return The display names of the songs in this level

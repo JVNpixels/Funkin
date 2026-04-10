@@ -1,6 +1,6 @@
 package funkin.ui.debug.leveleditor.components;
 
-#if FEATURE_STAGE_EDITOR
+#if FEATURE_LEVEL_EDITOR
 import haxe.ui.containers.dialogs.Dialog;
 import haxe.ui.containers.dialogs.Dialogs;
 import haxe.ui.containers.dialogs.MessageBox.MessageBoxType;
