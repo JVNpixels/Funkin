@@ -42,13 +42,13 @@ class ScriptEvent
    */
   public var eventCanceled:Bool = false;
 
-  public function new():Void
+  public function new(?type:ScriptEventType):Void
   {
     @:bypassAccessor
     {
       this.cancelable = false;
       this.shouldPropagate = true;
-      this.type = CREATE;
+      this.type = type != null ? type : CREATE;
       this.eventCanceled = false;
     }
   }
@@ -252,7 +252,7 @@ class HoldNoteScriptEvent extends NoteScriptEvent
    */
   public var doesNotesplash:Bool = false;
 
-  public function new():Void
+  public function new(?type:ScriptEventType, ?note:SustainTrail, ?something:Float, ?somethingTwo:Float, ?someBool:Bool, ?somethingThree:Float):Void
   {
     super();
     this.cancelable = true;

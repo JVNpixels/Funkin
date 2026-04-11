@@ -35,6 +35,8 @@ class SongMetadata implements ICloneable<SongMetadata>
    */
   @:optional
   public var charter:Null<String> = null;
+  @:optional
+  public var charters:Map<String, String>;
   @:optional @:default(96)
   public var divisions:Null<Int>; // Optional field
   @:optional @:default(false)

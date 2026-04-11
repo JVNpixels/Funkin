@@ -1515,21 +1515,13 @@ class FreeplayState extends MusicBeatSubState
     else
     {
       trace('Not enough characters unlocked to open character select!');
-<<<<<<< HEAD
-      FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
-=======
       FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
->>>>>>> pr-6747
       return;
     }
 
     uiStateMachine.transition(Exiting);
 
-<<<<<<< HEAD
-    FunkinSound.playOnce(Paths.sound(styleData?.getConfirmMenuSoundKey() ?? 'confirmMenu'));
-=======
     FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CONFIRM_SOUND));
->>>>>>> pr-6747
 
     dj?.toCharSelect();
 
@@ -1920,11 +1912,7 @@ class FreeplayState extends MusicBeatSubState
         {
           trace('No songs available!');
           uiStateMachine.transition(Idle);
-<<<<<<< HEAD
-          FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
-=======
           FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
->>>>>>> pr-6747
           return;
         }
 
@@ -1936,11 +1924,7 @@ class FreeplayState extends MusicBeatSubState
         targetSongID = currentCapsule?.freeplayData?.data.id ?? 'unknown';
       }
       // Play the confirm animation so the user knows they actually did something.
-<<<<<<< HEAD
-      FunkinSound.playOnce(Paths.sound(styleData?.getConfirmMenuSoundKey() ?? 'confirmMenu'));
-=======
       FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CONFIRM_SOUND));
->>>>>>> pr-6747
       // if (dj != null) dj.confirm();
       dj?.onConfirm();
       new FlxTimer().start(styleData?.getStartDelay(), function(tmr:FlxTimer)
@@ -1979,11 +1963,7 @@ class FreeplayState extends MusicBeatSubState
         {
           trace('No songs available!');
           uiStateMachine.transition(Idle);
-<<<<<<< HEAD
-          FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
-=======
           FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
->>>>>>> pr-6747
           return;
         }
 
@@ -2047,11 +2027,7 @@ class FreeplayState extends MusicBeatSubState
         {
           curSelected = i;
           changeSelection(0);
-<<<<<<< HEAD
-          FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
-=======
           FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
->>>>>>> pr-6747
           HapticUtil.vibrate(0, 0.01, 0.5);
         }
         break;
@@ -2295,11 +2271,7 @@ class FreeplayState extends MusicBeatSubState
 
     dispatchEvent(ScriptEventDispatcher.recycleEvent(FreeplayScriptEvent, FREEPLAY_OUTRO));
 
-<<<<<<< HEAD
-    FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
-=======
     FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
->>>>>>> pr-6747
 
     var longestTimer:Float = 0;
 
@@ -2447,11 +2419,7 @@ class FreeplayState extends MusicBeatSubState
     if (change != 0)
     {
       HapticUtil.vibrate(0, 0.01, 0.5, 0.1);
-<<<<<<< HEAD
-      FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
-=======
       FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
->>>>>>> pr-6747
     }
 
     var previousVariation:String = currentVariation;
@@ -2637,11 +2605,7 @@ class FreeplayState extends MusicBeatSubState
       trace('No songs available!');
       uiStateMachine.transition(Idle);
 
-<<<<<<< HEAD
-      FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
-=======
       FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
->>>>>>> pr-6747
       return;
     }
 
@@ -2837,11 +2801,7 @@ class FreeplayState extends MusicBeatSubState
     }
 
     // Visual and audio effects.
-<<<<<<< HEAD
-    FunkinSound.playOnce(Paths.sound(styleData?.getConfirmMenuSoundKey() ?? 'confirmMenu'));
-=======
     FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CONFIRM_SOUND));
->>>>>>> pr-6747
     dj?.onConfirm();
 
     currentCapsule.forcePosition();
@@ -2960,11 +2920,7 @@ class FreeplayState extends MusicBeatSubState
 
     if (curSelected != prevSelected)
     {
-<<<<<<< HEAD
-      FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
-=======
       FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
->>>>>>> pr-6747
       HapticUtil.vibrate(0, 0.01, 0.5);
       dj?.onPlayerAction(); // dj?.resetAFKTimer();
       _pressedOnSelected = false;
@@ -3000,11 +2956,7 @@ class FreeplayState extends MusicBeatSubState
       #end
     }
 
-<<<<<<< HEAD
-    if (!prepForNewRank && curSelected != prevSelected) FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
-=======
     if (!prepForNewRank && curSelected != prevSelected) FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
->>>>>>> pr-6747
 
     var songScore:Null<SaveScoreData> = Save.instance.getSongScore(currentCapsule.freeplayData?.data.id ?? '', currentDifficulty, currentVariation);
     intendedScore = songScore?.score ?? 0;
