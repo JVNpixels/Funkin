@@ -1259,7 +1259,7 @@ class FreeplayState extends MusicBeatSubState
     }
 
     FlxTween.tween(capsuleToRank.targetPos, {x: originalPos.x, y: originalPos.y}, 0.5, {ease: FlxEase.expoOut});
-    new FlxTimer().start(0.5, _ -> // SLAM THAT SHIT!
+    new FlxTimer().start(0.5, _ ->
     {
       // Capsule slam vibration.
       HapticUtil.vibrate(Constants.DEFAULT_VIBRATION_PERIOD, Constants.DEFAULT_VIBRATION_DURATION, Constants.MAX_VIBRATION_AMPLITUDE);
