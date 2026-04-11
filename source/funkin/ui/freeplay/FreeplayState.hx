@@ -401,6 +401,11 @@ class FreeplayState extends MusicBeatSubState
         continue;
       }
 
+      if (!level.isVisibleFreeplay())
+      {
+        continue;
+      }
+
       for (songId in level.getSongs())
       {
         var song:Null<Song> = SongRegistry.instance.fetchEntry(songId, {variation: currentVariation});
