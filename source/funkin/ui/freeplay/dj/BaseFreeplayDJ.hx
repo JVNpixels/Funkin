@@ -324,6 +324,27 @@ class BaseFreeplayDJ extends FunkinSprite implements IFreeplayScriptedClass
   }
 
   /**
+   * Called when a capsule receives a new rank.
+   */
+  public function onCapsuleNewRank(event:CapsuleScriptEvent):Void
+  {
+  }
+
+  /**
+   * Called when the rank letter slams down on a freeplay capsule.
+   */
+  public function onRankSlam(event:CapsuleScriptEvent):Void
+  {
+  }
+
+  /**
+   * Called when the entire capsule slams down, after a new rank has been applied.
+   */
+  public function onCapsuleSlam(event:CapsuleScriptEvent):Void
+  {
+  }
+
+  /**
    * Called when a capsule is selected.
    */
   public function onCapsuleSelected(event:CapsuleScriptEvent):Void
