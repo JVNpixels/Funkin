@@ -366,6 +366,12 @@ class FreeplayState extends MusicBeatSubState
 
     if (fromResultsParams != null)
     {
+      if (prepForNewRank && rememberedSongId == null)
+      {
+        // Set rememberedSongId to last played song if accessed from the RANDOM option
+        rememberedSongId = fromResultsParams.songId;
+      }
+    
       @:privateAccess
       this._parentState._constructor = () ->
       {
@@ -2627,6 +2633,8 @@ class FreeplayState extends MusicBeatSubState
     // Seeing if I can do an animation...
     curSelected = grpCapsules.members.indexOf(targetSongCap);
     changeSelection(); // Trigger an update. This will also fix the target variation.
+
+    rememberedSongId = null; // Go back to the random capsule when you reopen the menu.
 
     var targetSongId:String = targetSongCap?.freeplayData?.data.id ?? 'unknown';
     var targetSongNullable:Null<Song> = SongRegistry.instance.fetchEntry(targetSongId);
