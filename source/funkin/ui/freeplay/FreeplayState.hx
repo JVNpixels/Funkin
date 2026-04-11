@@ -220,7 +220,7 @@ class FreeplayState extends MusicBeatSubState
    * The song we were on when this menu was last accessed.
    * NOTE: `null` if the last song was `Random`.
    */
-  public static var rememberedSongId:Null<String> = 'tutorial';
+  public static var rememberedSongId:Null<String> = Constants.DEFAULT_SONG;
 
   /**
    * The character we were on when this menu was last accessed.
@@ -1212,13 +1212,13 @@ class FreeplayState extends MusicBeatSubState
       switch (fromResultsParams?.newRank)
       {
         case SHIT:
-          FunkinSound.playOnce(Paths.sound('ranks/rankinbad'));
+          FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_IN_BAD));
         case PERFECT:
-          FunkinSound.playOnce(Paths.sound('ranks/rankinperfect'));
+          FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_IN_PERFECT));
         case PERFECT_GOLD:
-          FunkinSound.playOnce(Paths.sound('ranks/rankinperfect'));
+          FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_IN_PERFECT_GOLD));
         default:
-          FunkinSound.playOnce(Paths.sound('ranks/rankinnormal'));
+          FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_IN_NORMAL));
       }
       rankCamera.zoom = 1.3;
 
@@ -1258,19 +1258,19 @@ class FreeplayState extends MusicBeatSubState
     switch (fromResultsParams?.newRank)
     {
       case SHIT:
-        FunkinSound.playOnce(Paths.sound('ranks/loss'));
+        FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_LOSS));
       case GOOD:
-        FunkinSound.playOnce(Paths.sound('ranks/good'));
+        FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_GOOD));
       case GREAT:
-        FunkinSound.playOnce(Paths.sound('ranks/great'));
+        FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_GREAT));
       case EXCELLENT:
-        FunkinSound.playOnce(Paths.sound('ranks/excellent'));
+        FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_EXCELLENT));
       case PERFECT:
-        FunkinSound.playOnce(Paths.sound('ranks/perfect'));
+        FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_PERFECT));
       case PERFECT_GOLD:
-        FunkinSound.playOnce(Paths.sound('ranks/perfect'));
+        FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_PERFECT_GOLD));
       default:
-        FunkinSound.playOnce(Paths.sound('ranks/loss'));
+        FunkinSound.playOnce(Paths.sound(Constants.SOUND_RANK_LOSS));
     }
 
     FlxTween.tween(capsuleToRank.targetPos, {x: originalPos.x, y: originalPos.y}, 0.5, {ease: FlxEase.expoOut});
@@ -1515,13 +1515,21 @@ class FreeplayState extends MusicBeatSubState
     else
     {
       trace('Not enough characters unlocked to open character select!');
+<<<<<<< HEAD
       FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
+=======
+      FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
+>>>>>>> pr-6747
       return;
     }
 
     uiStateMachine.transition(Exiting);
 
+<<<<<<< HEAD
     FunkinSound.playOnce(Paths.sound(styleData?.getConfirmMenuSoundKey() ?? 'confirmMenu'));
+=======
+    FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CONFIRM_SOUND));
+>>>>>>> pr-6747
 
     dj?.toCharSelect();
 
@@ -1912,7 +1920,11 @@ class FreeplayState extends MusicBeatSubState
         {
           trace('No songs available!');
           uiStateMachine.transition(Idle);
+<<<<<<< HEAD
           FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
+=======
+          FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
+>>>>>>> pr-6747
           return;
         }
 
@@ -1924,7 +1936,11 @@ class FreeplayState extends MusicBeatSubState
         targetSongID = currentCapsule?.freeplayData?.data.id ?? 'unknown';
       }
       // Play the confirm animation so the user knows they actually did something.
+<<<<<<< HEAD
       FunkinSound.playOnce(Paths.sound(styleData?.getConfirmMenuSoundKey() ?? 'confirmMenu'));
+=======
+      FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CONFIRM_SOUND));
+>>>>>>> pr-6747
       // if (dj != null) dj.confirm();
       dj?.onConfirm();
       new FlxTimer().start(styleData?.getStartDelay(), function(tmr:FlxTimer)
@@ -1963,7 +1979,11 @@ class FreeplayState extends MusicBeatSubState
         {
           trace('No songs available!');
           uiStateMachine.transition(Idle);
+<<<<<<< HEAD
           FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
+=======
+          FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
+>>>>>>> pr-6747
           return;
         }
 
@@ -2027,7 +2047,11 @@ class FreeplayState extends MusicBeatSubState
         {
           curSelected = i;
           changeSelection(0);
+<<<<<<< HEAD
           FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
+=======
+          FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
+>>>>>>> pr-6747
           HapticUtil.vibrate(0, 0.01, 0.5);
         }
         break;
@@ -2271,7 +2295,11 @@ class FreeplayState extends MusicBeatSubState
 
     dispatchEvent(ScriptEventDispatcher.recycleEvent(FreeplayScriptEvent, FREEPLAY_OUTRO));
 
+<<<<<<< HEAD
     FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
+=======
+    FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
+>>>>>>> pr-6747
 
     var longestTimer:Float = 0;
 
@@ -2419,7 +2447,11 @@ class FreeplayState extends MusicBeatSubState
     if (change != 0)
     {
       HapticUtil.vibrate(0, 0.01, 0.5, 0.1);
+<<<<<<< HEAD
       FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
+=======
+      FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
+>>>>>>> pr-6747
     }
 
     var previousVariation:String = currentVariation;
@@ -2605,7 +2637,11 @@ class FreeplayState extends MusicBeatSubState
       trace('No songs available!');
       uiStateMachine.transition(Idle);
 
+<<<<<<< HEAD
       FunkinSound.playOnce(Paths.sound(styleData?.getCancelMenuSoundKey() ?? 'cancelMenu'));
+=======
+      FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CANCEL_SOUND));
+>>>>>>> pr-6747
       return;
     }
 
@@ -2801,7 +2837,11 @@ class FreeplayState extends MusicBeatSubState
     }
 
     // Visual and audio effects.
+<<<<<<< HEAD
     FunkinSound.playOnce(Paths.sound(styleData?.getConfirmMenuSoundKey() ?? 'confirmMenu'));
+=======
+    FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_CONFIRM_SOUND));
+>>>>>>> pr-6747
     dj?.onConfirm();
 
     currentCapsule.forcePosition();
@@ -2920,7 +2960,11 @@ class FreeplayState extends MusicBeatSubState
 
     if (curSelected != prevSelected)
     {
+<<<<<<< HEAD
       FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
+=======
+      FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
+>>>>>>> pr-6747
       HapticUtil.vibrate(0, 0.01, 0.5);
       dj?.onPlayerAction(); // dj?.resetAFKTimer();
       _pressedOnSelected = false;
@@ -2956,7 +3000,11 @@ class FreeplayState extends MusicBeatSubState
       #end
     }
 
+<<<<<<< HEAD
     if (!prepForNewRank && curSelected != prevSelected) FunkinSound.playOnce(Paths.sound(styleData?.getScrollMenuSoundKey() ?? 'scrollMenu'), 0.4);
+=======
+    if (!prepForNewRank && curSelected != prevSelected) FunkinSound.playOnce(Paths.sound(Constants.DEFAULT_SCROLL_SOUND), 0.4);
+>>>>>>> pr-6747
 
     var songScore:Null<SaveScoreData> = Save.instance.getSongScore(currentCapsule.freeplayData?.data.id ?? '', currentDifficulty, currentVariation);
     intendedScore = songScore?.score ?? 0;
@@ -3118,7 +3166,7 @@ class FreeplayState extends MusicBeatSubState
 
   public function switchBackingImage(?freeplaySongData:FreeplaySongData):Void
   {
-    var path = Paths.image('freeplay/freeplayBG${freeplaySongData?.levelId ?? 'week1'}-${currentCharacterId ?? 'bf'}');
+    var path = Paths.image('freeplay/freeplayBG${freeplaySongData?.levelId ?? 'week1'}-${currentCharacterId ?? Constants.DEFAULT_CHARACTER}');
     if (!Assets.exists(path)) path = Paths.image('freeplay/freeplayBGweek1-bf');
     backingImage.loadTextureAsync(path);
   }
