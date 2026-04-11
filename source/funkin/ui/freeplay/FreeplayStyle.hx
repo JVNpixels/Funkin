@@ -28,7 +28,7 @@ class FreeplayStyle implements IRegistryEntry<FreeplayStyleData>
 
     if (_data == null)
     {
-      throw 'Could not parse album data for id: $id';
+      throw 'Could not parse freeplay style for id: $id';
     }
   }
 
@@ -85,6 +85,36 @@ class FreeplayStyle implements IRegistryEntry<FreeplayStyleData>
   public function getCapsuleDeselCol():FlxColor
   {
     return FlxColor.fromString(_data?.capsuleTextColors[0] ?? "#00ccff") ?? 0x00CCFF;
+  }
+
+  public function getFreeplayRandomMusicKey():String
+  {
+    return _data?.sounds?.freeplayRandomMusic ?? "freeplayRandom";
+  }
+
+  public function getFavSoundKey():String
+  {
+    return _data?.sounds?.fav ?? "fav";
+  }
+
+  public function getUnFavSoundKey():String
+  {
+    return _data?.sounds?.unfav ?? "unfav";
+  }
+
+  public function getScrollMenuSoundKey():String
+  {
+    return _data?.sounds?.menu?.scroll ?? "scrollMenu";
+  }
+
+  public function getCancelMenuSoundKey():String
+  {
+    return _data?.sounds?.menu?.cancel ?? "cancelMenu";
+  }
+
+  public function getConfirmMenuSoundKey():String
+  {
+    return _data?.sounds?.menu?.confirm ?? "confirmMenu";
   }
 
   /**

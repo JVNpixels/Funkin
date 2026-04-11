@@ -533,7 +533,6 @@ class CapsuleScriptEvent extends ScriptEvent
    */
   public var variationId:String;
 
-<<<<<<< HEAD
   /**
    * The rank achieved on the selected song.
    */
@@ -541,17 +540,11 @@ class CapsuleScriptEvent extends ScriptEvent
 
   public function new(type:ScriptEventType, capsule:SongMenuItem, difficultyId:String, variationId:String, ?rank:ScoringRank):Void
   {
-    super(type, false);
+    super();
     this.capsule = capsule;
     this.difficultyId = difficultyId;
     this.variationId = variationId;
     this.rank = rank;
-=======
-  public function new():Void
-  {
-    super();
-    this.cancelable = false;
->>>>>>> pr-7238
   }
 
   override public function toString():String
