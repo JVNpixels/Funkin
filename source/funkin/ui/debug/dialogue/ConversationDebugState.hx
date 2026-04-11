@@ -42,7 +42,7 @@ class ConversationDebugState extends MusicBeatState
     add(conversation);
     refresh();
 
-    var event:ScriptEvent = new ScriptEvent(CREATE, false);
+    var event:ScriptEvent = ScriptEventDispatcher.recycleEvent(ScriptEvent, CREATE);
     ScriptEventDispatcher.callEvent(conversation, event);
   }
 

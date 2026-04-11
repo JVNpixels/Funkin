@@ -10,6 +10,43 @@ import funkin.modding.module.Module;
 @:nullSafety
 class ScriptEventDispatcher
 {
+  private static var eventPool:Array<ScriptEvent> = [];
+
+  /**
+   * Recycles the event from the event pool. This prevents the garbage collector from being called a ton!
+   * @param eventClass  The event class that should be recycled.
+   * @param type        The event type.
+   * @param cancelable  Whether the event can be canceled by scripts.
+   */
+  @:generic
+  public static function recycleEvent<T:ScriptEvent>(eventClass:Class<T>, type:ScriptEventType, cancelable:Bool = false):T
+  {
+    var result:Null<T> = null;
+    var eventPool:Array<T> = cast ScriptEventDispatcher.eventPool;
+
+    for (event in eventPool)
+    {
+      if (Type.getClass(event) == eventClass)
+      {
+        result = event;
+        break;
+      }
+    }
+
+    if (result == null)
+    {
+      result = Type.createInstance(eventClass, []);
+      eventPool.push(result);
+    }
+
+    result.eventCanceled = false;
+    result.shouldPropagate = true;
+    result.type = type;
+    result.cancelable = cancelable;
+
+    return result;
+  }
+
   /**
    * Invoke the given event hook on the given scripted class.
    * @param target The target class to call script hooks on.

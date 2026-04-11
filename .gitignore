@@ -2,6 +2,7 @@
 .haxelib/
 .vs/
 APIStuff.hx
+merge.bat
 dump/
 temp/
 docs/temp/

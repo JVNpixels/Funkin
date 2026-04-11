@@ -57,7 +57,9 @@ class ModuleHandler
 
   static function onStateSwitchComplete():Void
   {
-    callEvent(new StateChangeScriptEvent(STATE_CHANGE_END, FlxG.state, true));
+    var event:StateChangeScriptEvent = ScriptEventDispatcher.recycleEvent(StateChangeScriptEvent, STATE_CHANGE_END, true);
+    event.targetState = FlxG.state;
+    callEvent(event);
   }
 
   static function addToModuleCache(module:Module):Void
@@ -125,7 +127,7 @@ class ModuleHandler
   {
     if (moduleCache != null)
     {
-      var event = new ScriptEvent(DESTROY, false);
+      var event = ScriptEventDispatcher.recycleEvent(ScriptEvent, DESTROY);
 
       // Note: Ignore stopPropagation()
       for (key => value in moduleCache)
@@ -161,6 +163,6 @@ class ModuleHandler
 
   public static inline function callOnCreate():Void
   {
-    callEvent(new ScriptEvent(CREATE, false));
+    callEvent(ScriptEventDispatcher.recycleEvent(ScriptEvent, CREATE));
   }
 }
