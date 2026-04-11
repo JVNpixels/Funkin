@@ -918,9 +918,9 @@ class Stage extends FlxSpriteGroup implements IPlayStateScriptedClass implements
   {
   }
 
-  public function onNoteHoldDrop(event:HoldNoteScriptEvent)
-  {
-  }
+  public function onNoteHoldHit(event:HoldNoteScriptEvent) {}
+
+  public function onNoteHoldDrop(event:HoldNoteScriptEvent) {}
 
   public function onSongEvent(event:SongEventScriptEvent)
   {

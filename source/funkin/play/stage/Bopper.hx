@@ -368,9 +368,9 @@ class Bopper extends StageProp implements IPlayStateScriptedClass
   {
   }
 
-  public function onNoteHoldDrop(event:HoldNoteScriptEvent)
-  {
-  }
+  public function onNoteHoldHit(event:HoldNoteScriptEvent) {}
+
+  public function onNoteHoldDrop(event:HoldNoteScriptEvent) {}
 
   public function onNoteMiss(event:NoteScriptEvent)
   {
