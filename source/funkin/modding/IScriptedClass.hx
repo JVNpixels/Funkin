@@ -71,16 +71,6 @@ interface INoteScriptedClass extends IScriptedClass
    * Called when EITHER player (usually the player) misses a note.
    */
   public function onNoteMiss(event:NoteScriptEvent):Void;
-
-  /**
-   * Called when either player holds a note.
-   */
-  public function onNoteHoldHit(event:HoldNoteScriptEvent):Void;
-
-  /**
-   * Called when EITHER player (usually the player) drops a hold note.
-   */
-  public function onNoteHoldDrop(event:HoldNoteScriptEvent):Void;
 }
 
 /**

@@ -252,7 +252,7 @@ class HoldNoteScriptEvent extends NoteScriptEvent
    */
   public var doesNotesplash:Bool = false;
 
-  public function new(?type:ScriptEventType, ?note:SustainTrail, ?something:Float, ?somethingTwo:Float, ?someBool:Bool, ?somethingThree:Float):Void
+  public function new():Void
   {
     super();
     this.cancelable = true;
