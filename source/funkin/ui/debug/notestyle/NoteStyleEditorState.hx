@@ -1,35 +1,35 @@
 package funkin.ui.debug.notestyle;
 
 #if FEATURE_NOTESTYLE_EDITOR
-import flixel.FlxCamera;
-import flixel.FlxSprite;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.util.FlxColor;
-import funkin.save.Save;
-import funkin.input.Cursor;
 import haxe.ui.backend.flixel.UIState;
 import haxe.ui.containers.menus.MenuItem;
 import haxe.ui.containers.menus.Menu;
 import haxe.ui.containers.menus.MenuBar;
 import haxe.ui.containers.menus.MenuOptionBox;
 import haxe.ui.containers.menus.MenuCheckBox;
-import funkin.util.FileUtil;
-import funkin.ui.mainmenu.MainMenuState;
-import funkin.ui.debug.notestyle.handlers.*;
-import funkin.ui.debug.notestyle.handlers.ui.*;
 import haxe.ui.containers.dialogs.Dialog.DialogButton;
 import haxe.ui.containers.dialogs.MessageBox.MessageBoxType;
 import haxe.ui.components.Button;
 import haxe.ui.containers.windows.WindowList;
 import haxe.ui.containers.windows.WindowManager;
 import haxe.ui.components.Label;
-import funkin.ui.debug.FunkinDebugDisplay.DebugDisplayMode;
-import funkin.util.WindowUtil;
+import flixel.FlxCamera;
+import flixel.FlxSprite;
+import flixel.addons.display.FlxGridOverlay;
+import flixel.util.FlxColor;
 import funkin.audio.FunkinSound;
+import funkin.save.Save;
+import funkin.input.Cursor;
+import funkin.util.FileUtil;
+import funkin.util.WindowUtil;
 import funkin.util.logging.CrashHandler;
+import funkin.graphics.FunkinCamera;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.debug.notestyle.handlers.*;
+import funkin.ui.debug.notestyle.handlers.ui.*;
+import funkin.ui.debug.FunkinDebugDisplay.DebugDisplayMode;
 import funkin.play.notes.notestyle.NoteStyle;
 import funkin.data.notestyle.NoteStyleRegistry;
-import funkin.graphics.FunkinCamera;
 import funkin.play.notes.NoteSprite;
 import funkin.play.notes.Strumline;
 import funkin.play.notes.StrumlineNote;
@@ -87,8 +87,8 @@ class NoteStyleEditorState extends UIState
     persistentUpdate = false;
 
     setupBG();
-    NoteStyleEditorThemeHandler.updateBGColors(this);
-
+    NoteStyleEditorThemeHandler.updateBG(this);
+    
     #if FEATURE_DISCORD_RPC
     updateDiscordRPC();
     #end

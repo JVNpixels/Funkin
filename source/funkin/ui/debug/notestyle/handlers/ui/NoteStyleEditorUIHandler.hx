@@ -48,6 +48,11 @@ class NoteStyleEditorUIHandler
     state.menubarItemThemeDark.onClick = function(_) NoteStyleEditorThemeHandler.changeTheme(state, NoteStyleEditorThemeHandler.NoteStyleEditorTheme.Dark);
     state.menubarItemThemeDark.selected = Save.instance.noteStyleEditorTheme.value == NoteStyleEditorThemeHandler.NoteStyleEditorTheme.Dark;
 
+    state.menubarItemBackgroundGrid.onClick = function(_) NoteStyleEditorThemeHandler.changeBackground(state, NoteStyleEditorThemeHandler.NoteStyleEditorBackground.Grid);
+    state.menubarItemBackgroundGrid.selected =  Save.instance.noteStyleEditorBackground.value == NoteStyleEditorThemeHandler.NoteStyleEditorBackground.Grid;
+    state.menubarItemBackgroundMenu.onClick = function(_) NoteStyleEditorThemeHandler.changeBackground(state, NoteStyleEditorThemeHandler.NoteStyleEditorBackground.Menu);
+    state.menubarItemBackgroundMenu.selected = Save.instance.noteStyleEditorBackground.value == NoteStyleEditorThemeHandler.NoteStyleEditorBackground.Menu;
+
     state.menubarItemHitsoundPlayer.onClick = function(_) 
     {
       NoteStyleEditorHitsoundsHandler.changeHitsound(state, NoteStyleEditorHitsoundsHandler.NoteStyleEditorHitsound.Player);

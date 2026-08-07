@@ -11,6 +11,7 @@ import funkin.ui.debug.charting.ChartEditorState.ChartEditorLiveInputStyle;
 import funkin.ui.debug.charting.ChartEditorState.ChartEditorTheme;
 import funkin.ui.debug.stageeditor.StageEditorState.StageEditorTheme;
 import funkin.ui.debug.notestyle.handlers.NoteStyleEditorThemeHandler.NoteStyleEditorTheme;
+import funkin.ui.debug.notestyle.handlers.NoteStyleEditorThemeHandler.NoteStyleEditorBackground;
 import funkin.ui.debug.notestyle.handlers.NoteStyleEditorHitsoundsHandler.NoteStyleEditorHitsound;
 import funkin.util.FileUtil;
 import funkin.util.macro.ConsoleMacro;
@@ -188,6 +189,7 @@ class Save implements ConsoleClass
       optionsNoteStyleEditor: {
         themeMusic: true,
         theme: NoteStyleEditorTheme.Light,
+        background: NoteStyleEditorBackground.Grid,
         hitsound: NoteStyleEditorHitsound.Player,
         hitsoundVolume: 1.0,
         previousFiles: []
@@ -379,6 +381,8 @@ class Save implements ConsoleClass
   public var noteStyleEditorThemeMusic:SaveProperty<Bool>;
   @:saveProperty(data.optionsNoteStyleEditor.theme, NoteStyleEditorTheme.Light)
   public var noteStyleEditorTheme:SaveProperty<NoteStyleEditorTheme>;
+  @:saveProperty(data.optionsNoteStyleEditor.background, NoteStyleEditorBackground.Grid)
+  public var noteStyleEditorBackground:SaveProperty<NoteStyleEditorBackground>;
   @:saveProperty(data.optionsNoteStyleEditor.hitsound, NoteStyleEditorHitsound.Player)
   public var noteStyleEditorHitsound:SaveProperty<NoteStyleEditorHitsound>;
   @:saveProperty(data.optionsNoteStyleEditor.hitsoundVolume, 1.0)
@@ -1584,6 +1588,12 @@ typedef SaveDataNoteStyleEditorOptions =
    * @default `NoteStyleEditorTheme.Light`
    */
   var ?theme:NoteStyleEditorTheme;
+
+  /**
+   * Background in the NoteStyle Editor.
+   * @default `NoteStyleEditorBackground.Grid`
+   */
+  var ?background:NoteStyleEditorBackground;
 
   /**
    * Hitsound in the NoteStyle Editor.
