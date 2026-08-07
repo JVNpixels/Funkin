@@ -10,6 +10,8 @@ import funkin.save.migrator.SaveDataMigrator;
 import funkin.ui.debug.charting.ChartEditorState.ChartEditorLiveInputStyle;
 import funkin.ui.debug.charting.ChartEditorState.ChartEditorTheme;
 import funkin.ui.debug.stageeditor.StageEditorState.StageEditorTheme;
+import funkin.ui.debug.notestyle.handlers.NoteStyleEditorThemeHandler.NoteStyleEditorTheme;
+import funkin.ui.debug.notestyle.handlers.NoteStyleEditorHitsoundsHandler.NoteStyleEditorHitsound;
 import funkin.util.FileUtil;
 import funkin.util.macro.ConsoleMacro;
 import funkin.util.macro.SaveMacro;
@@ -182,6 +184,13 @@ class Save implements ConsoleClass
         bfChar: "bf",
         gfChar: "gf",
         dadChar: "dad"
+      },
+      optionsNoteStyleEditor: {
+        themeMusic: true,
+        theme: NoteStyleEditorTheme.Light,
+        hitsound: NoteStyleEditorHitsound.Player,
+        hitsoundVolume: 1.0,
+        previousFiles: []
       }
     };
   }
@@ -362,6 +371,20 @@ class Save implements ConsoleClass
     Save.system.flush();
     return data.optionsStageEditor.dadChar;
   }
+
+  ///
+  /// NOTESTYLE EDITOR
+  ///
+  @:saveProperty(data.optionsNoteStyleEditor.themeMusic, true)
+  public var noteStyleEditorThemeMusic:SaveProperty<Bool>;
+  @:saveProperty(data.optionsNoteStyleEditor.theme, NoteStyleEditorTheme.Light)
+  public var noteStyleEditorTheme:SaveProperty<NoteStyleEditorTheme>;
+  @:saveProperty(data.optionsNoteStyleEditor.hitsound, NoteStyleEditorHitsound.Player)
+  public var noteStyleEditorHitsound:SaveProperty<NoteStyleEditorHitsound>;
+  @:saveProperty(data.optionsNoteStyleEditor.hitsoundVolume, 1.0)
+  public var noteStyleEditorHitsoundVolume:SaveProperty<Float>;
+  @:saveProperty(data.optionsNoteStyleEditor.previousFiles, [])
+  public var noteStyleEditorPreviousFiles:SaveProperty<Array<String>>;
 
   /// UTIL FUNCTIONS
 
@@ -1002,6 +1025,11 @@ typedef RawSaveData =
    * The user's preferences specific to the Stage Editor.
    */
   var optionsStageEditor:SaveDataStageEditorOptions;
+
+  /**
+   * The user's preferences specific to the NoteStyle Editor.
+   */
+  var optionsNoteStyleEditor:SaveDataNoteStyleEditorOptions;
 };
 
 typedef SaveApiData =
@@ -1541,4 +1569,37 @@ typedef SaveDataStageEditorOptions =
    * @default dad
    */
   var ?dadChar:String;
+}
+
+typedef SaveDataNoteStyleEditorOptions =
+{
+  /**
+   * Theme music in the NoteStyle Editor.
+   * @default `true`
+   */
+  var ?themeMusic:Bool;
+
+  /**
+   * Theme in the NoteStyle Editor.
+   * @default `NoteStyleEditorTheme.Light`
+   */
+  var ?theme:NoteStyleEditorTheme;
+
+  /**
+   * Hitsound in the NoteStyle Editor.
+   * @default `NoteStyleEditorHitsound.Player`
+   */
+  var ?hitsound:NoteStyleEditorHitsound;
+
+  /**
+   * Hitsound volume in the NoteStyle Editor.
+   * @default 1.0
+   */
+  var ?hitsoundVolume:Float;
+
+  /**
+   * Previous files opened in the NoteStyle Editor.
+   * @default `[]`
+   */
+  var ?previousFiles:Array<String>;
 }

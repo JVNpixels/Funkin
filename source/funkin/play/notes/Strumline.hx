@@ -152,7 +152,7 @@ class Strumline extends FlxSpriteGroup
 
   var notesVwoosh:FlxTypedSpriteGroup<NoteSprite>;
   var holdNotesVwoosh:FlxTypedSpriteGroup<SustainTrail>;
-  final noteStyle:NoteStyle;
+  var noteStyle:NoteStyle;
   var noteSpacingScale:Float = 1;
 
   /**

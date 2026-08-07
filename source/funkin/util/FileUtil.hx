@@ -29,6 +29,11 @@ class FileUtil
   public static final FILE_FILTER_FNFS:FileFilter = new FileFilter('Friday Night Funkin\' Stage', '*.fnfs');
 
   /**
+   * File filter for Friday Night Funkin' notestyle files.
+   */
+  public static final FILE_FILTER_FNFNS:FileFilter = new FileFilter('Friday Night Funkin\' NoteStyle', '*.fnfns');
+
+  /**
    * File filter for JSON data files.
    */
   public static final FILE_FILTER_JSON:FileFilter = new FileFilter('JSON Data File', '*.json');
@@ -1291,6 +1296,7 @@ class FileUtilSandboxed
 
   public static final FILE_FILTER_FNFC:FileFilter = FileUtil.FILE_FILTER_FNFC;
   public static final FILE_FILTER_FNFS:FileFilter = FileUtil.FILE_FILTER_FNFS;
+  public static final FILE_FILTER_FNFNS:FileFilter = FileUtil.FILE_FILTER_FNFNS;
   public static final FILE_FILTER_JSON:FileFilter = FileUtil.FILE_FILTER_JSON;
   public static final FILE_FILTER_TXT:FileFilter = FileUtil.FILE_FILTER_TXT;
   public static final FILE_FILTER_XML:FileFilter = FileUtil.FILE_FILTER_XML;

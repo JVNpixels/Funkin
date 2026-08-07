@@ -613,6 +613,11 @@ class Constants
   public static final EXT_STAGE:String = 'fnfs';
 
   /**
+   * The file extension used when exporting notestyle files.
+   */
+  public static final EXT_NOTESTYLE:String = 'fnfns';
+
+  /**
    * The file extension used when loading audio files.
    */
   public static final EXT_SOUND:String = #if web 'mp3' #else 'ogg' #end;
