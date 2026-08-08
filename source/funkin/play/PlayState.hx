@@ -61,6 +61,9 @@ import funkin.ui.debug.charting.ChartEditorState;
 #if FEATURE_STAGE_EDITOR
 import funkin.ui.debug.stageeditor.StageEditorState;
 #end
+#if FEATURE_NOTESTYLE_EDITOR
+import funkin.ui.debug.notestyle.NoteStyleEditorState;
+#end
 import funkin.ui.debug.stage.StageOffsetSubState;
 import funkin.ui.mainmenu.MainMenuState;
 import funkin.ui.MusicBeatSubState;
@@ -441,6 +444,17 @@ class PlayState extends MusicBeatSubState
     return false;
     #end
   }
+  
+  public var isNoteStyleEditorMode(get, never):Bool;
+
+  function get_isNoteStyleEditorMode():Bool
+  {
+    #if FEATURE_NOTESTYLE_EDITOR
+    return this._parentState != null && Std.isOfType(this._parentState, NoteStyleEditorState);
+    #else
+    return false;
+    #end
+  }
 
   /**
    * The current dialogue.
@@ -798,9 +812,9 @@ class PlayState extends MusicBeatSubState
 
     var currentChart = currentSong.getDifficulty(currentDifficulty, currentVariation);
     var noteStyleId:String = currentChart?.noteStyle ?? '';
-    var nulNoteStyle:Null<NoteStyle> = NoteStyleRegistry.instance.fetchEntry(noteStyleId);
-    if (nulNoteStyle == null) nulNoteStyle = NoteStyleRegistry.instance.fetchDefault();
-    noteStyle = nulNoteStyle;
+    var nullNoteStyle:Null<NoteStyle> = NoteStyleRegistry.instance.fetchEntry(noteStyleId);
+    if (nullNoteStyle == null) nullNoteStyle = NoteStyleRegistry.instance.fetchDefault();
+    noteStyle = nullNoteStyle;
 
     // Strumlines
     playerStrumline = new Strumline(noteStyle, !isBotPlayMode, currentChart?.scrollSpeed);
@@ -855,6 +869,16 @@ class PlayState extends MusicBeatSubState
     // Make the player unable to pause if they're moving from the chart editor while the focus is still on since the input persists.
     @:privateAccess
     justUnpaused = isChartingMode && !FlxG.game._lostFocus;
+
+    if (isNoteStyleEditorMode)
+    {
+      playerStrumline = new Strumline(NoteStyleEditorState.noteStyleInUse, !isBotPlayMode, currentChart?.scrollSpeed);
+      playerStrumline.clean();
+      opponentStrumline = new Strumline(NoteStyleEditorState.noteStyleInUse, false, currentChart?.scrollSpeed);
+      opponentStrumline.clean();
+
+      comboPopUps = new PopUpStuff(NoteStyleEditorState.noteStyleInUse);
+    }
 
     // Stop any pre-existing music.
     if (!overrideMusic)
@@ -1397,8 +1421,15 @@ class PlayState extends MusicBeatSubState
             {
               boyfriendPos = currentStage.getBoyfriend().getScreenPosition();
             }
-
-            openPauseSubState(isChartingMode ? Charting : Standard, camPause, lostFocus);
+            
+            if (isChartingMode)
+            {
+              openPauseSubState(Charting, camPause, lostFocus);
+            } else if (isNoteStyleEditorMode) {
+              openPauseSubState(NoteStyle, camPause, lostFocus);
+            } else {
+              openPauseSubState(Standard, camPause, lostFocus);
+            }
           }
 
           #if FEATURE_DISCORD_RPC
@@ -1462,6 +1493,7 @@ class PlayState extends MusicBeatSubState
     // Transition to the game over substate.
     var gameOverSubState = new GameOverSubState({
       isChartingMode: isChartingMode,
+      isNoteStyleEditorMode: isNoteStyleEditorMode,
       transparent: persistentDraw
     });
     FlxTransitionableState.skipNextTransIn = true;
@@ -2432,6 +2464,10 @@ class PlayState extends MusicBeatSubState
       {
         return 'Chart Editor [Playtest]';
       }
+      else if (isNoteStyleEditorMode)
+      {
+        return 'NoteStyle Editor [Playtest]';
+      }
       else if (isPracticeMode)
       {
         return 'Freeplay [Practice]';
@@ -3306,7 +3342,7 @@ class PlayState extends MusicBeatSubState
       && iconP1 != null) iconP1.toggleOldIcon();
 
     final isDebug:Bool = #if FEATURE_DEBUG_FUNCTIONS true #else false #end;
-    if (isChartingMode || isDebug)
+    if (isChartingMode || isNoteStyleEditorMode || isDebug)
     {
       // PAGEUP: Skip forward two sections.
       // SHIFT+PAGEUP: Skip forward twenty sections.
@@ -3515,7 +3551,7 @@ class PlayState extends MusicBeatSubState
 
     #if FEATURE_NEWGROUNDS
     // Only award medals if we are LEGIT.
-    if (!isPracticeMode && !isBotPlayMode && !isChartingMode && currentSong.validScore)
+    if (!isPracticeMode && !isBotPlayMode && !isChartingMode && !isNoteStyleEditorMode && currentSong.validScore)
     {
       // Award a medal for beating at least one song on any difficulty on a Friday.
       if (Date.now().getDay() == 5) Medals.award(FridayNight);

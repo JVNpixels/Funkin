@@ -2,7 +2,9 @@ package funkin.ui.debug.notestyle.handlers.ui;
 
 import haxe.ui.containers.dialogs.Dialog;
 import haxe.ui.containers.dialogs.Dialogs;
+import funkin.play.song.Song;
 import funkin.ui.debug.notestyle.dialogs.*;
+import funkin.ui.debug.notestyle.dialogs.testing.*;
 import funkin.ui.debug.notestyle.dialogs.create.*;
 import funkin.ui.debug.notestyle.dialogs.create.countdown.*;
 
@@ -22,6 +24,10 @@ class NoteStyleEditorDialogHandler
 
   public static var userGuideDialog:UserGuideDialog;
   public static var aboutDialog:AboutDialog;
+
+  public static var testingSongsDialog:SongsDialog;
+  public static var testingVariationsDialog:VariationsDialog;
+  public static var testingDifficultiesDialog:DifficultiesDialog;
 
   public static function showMetadataDialog(state:NoteStyleEditorState, closable:Bool = true)
   {
@@ -86,6 +92,39 @@ class NoteStyleEditorDialogHandler
     countdownSoundsDialog.onDialogClosed = function(_)
     {
       countdownSoundsDialog = null;
+    }
+  }
+
+  public static function showTestingSongsDialog(state:NoteStyleEditorState, closable:Bool = true)
+  {
+    testingSongsDialog = new SongsDialog(state);
+    testingSongsDialog.showDialog();
+    testingSongsDialog.closable = closable;
+    testingSongsDialog.onDialogClosed = function(_)
+    {
+      testingSongsDialog = null;
+    }
+  }
+
+  public static function showTestingVariationsDialog(state:NoteStyleEditorState, songData:Song, closable:Bool = true)
+  {
+    testingVariationsDialog = new VariationsDialog(state, songData);
+    testingVariationsDialog.showDialog();
+    testingVariationsDialog.closable = closable;
+    testingVariationsDialog.onDialogClosed = function(_)
+    {
+      testingVariationsDialog = null;
+    }
+  }
+
+  public static function showTestingDifficultiesDialog(state:NoteStyleEditorState, songData:Song, ?variation:String, closable:Bool = true)
+  {
+    testingDifficultiesDialog = new DifficultiesDialog(state, songData, variation);
+    testingDifficultiesDialog.showDialog();
+    testingDifficultiesDialog.closable = closable;
+    testingDifficultiesDialog.onDialogClosed = function(_)
+    {
+      testingDifficultiesDialog = null;
     }
   }
 }

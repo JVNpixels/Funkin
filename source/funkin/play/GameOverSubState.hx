@@ -90,6 +90,7 @@ class GameOverSubState extends MusicBeatSubState
   var isStarting:Bool = true;
 
   var isChartingMode:Bool = false;
+  var isNoteStyleEditorMode:Bool = false;
   var mustNotExit:Bool = false;
   var transparent:Bool;
 
@@ -103,6 +104,7 @@ class GameOverSubState extends MusicBeatSubState
     super();
 
     this.isChartingMode = params?.isChartingMode ?? false;
+    this.isNoteStyleEditorMode = params?.isNoteStyleEditorMode ?? false;
     transparent = params.transparent;
 
     cameraFollowPoint = new FlxObject(0, 0, 1, 1);
@@ -558,12 +560,13 @@ class GameOverSubState extends MusicBeatSubState
       deathQuoteSound = null;
     }
 
-    if (isChartingMode)
+    if (isChartingMode || isNoteStyleEditorMode)
     {
       this.close();
       if (FlxG.sound.music != null) FlxG.sound.music.pause(); // Don't reset song position!
       if (parentPlayState != null) parentPlayState.close(); // This only works because PlayState is a substate!
       parentPlayState = null;
+      FlxG.camera.zoom = 1;
       return;
     }
     else
@@ -637,5 +640,6 @@ class GameOverSubState extends MusicBeatSubState
 typedef GameOverParams =
 {
   var isChartingMode:Bool;
+  var isNoteStyleEditorMode:Bool;
   var transparent:Bool;
 }

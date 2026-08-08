@@ -17,7 +17,7 @@ class NoteStyleEditorActionHandler
     switch (action)
     {
       case "Open NoteStyle":
-        FileUtil.browseForFile("Open NoteStyle Data", [FileUtil.FILE_FILTER_FNFNS], (fileInfo) -> NoteStyleEditorNotificationHandler.success(state, 'Success', 'Opened file' + state.currentFile));
+        FileUtil.browseForFile("Open NoteStyle Data", [FileUtil.FILE_FILTER_FNFNS], (fileInfo) -> NoteStyleEditorNotificationHandler.success(state, 'Success', 'Opened file ' + fileInfo.fullPath));
 
       case "Save NoteStyle":
         state.saveNoteStyle();

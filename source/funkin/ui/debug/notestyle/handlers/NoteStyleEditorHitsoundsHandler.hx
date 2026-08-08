@@ -2,6 +2,7 @@ package funkin.ui.debug.notestyle.handlers;
 
 import funkin.save.Save;
 import funkin.audio.FunkinSound;
+import funkin.ui.debug.notestyle.handlers.NoteStyleEditorModeHandler;
 
 #if FEATURE_NOTESTYLE_EDITOR
 
@@ -18,7 +19,7 @@ class NoteStyleEditorHitsoundsHandler
   public static function checkForHitsounds(state:NoteStyleEditorState)
   {
     hitsound = Save.instance.noteStyleEditorHitsound.value;
-    if (pressingKeys())
+    if (pressingKeys() && NoteStyleEditorModeHandler.currentMode != NoteStyleEditorModeHandler.NoteStyleEditorMode.Notes)
     {
       switch (hitsound)
       {

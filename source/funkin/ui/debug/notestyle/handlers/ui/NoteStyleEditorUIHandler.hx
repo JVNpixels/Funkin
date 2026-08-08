@@ -88,6 +88,8 @@ class NoteStyleEditorUIHandler
 
     state.menubarItemVolumeHitsound.disabled = Save.instance.noteStyleEditorHitsound.value == NoteStyleEditorHitsoundsHandler.NoteStyleEditorHitsound.None;
     state.menubarLabelVolumeHitsound.disabled = Save.instance.noteStyleEditorHitsound.value == NoteStyleEditorHitsoundsHandler.NoteStyleEditorHitsound.None;
+
+    state.menubarButtonTest.onClick = function(_) NoteStyleEditorDialogHandler.showTestingSongsDialog(state);
   }
 }
 #end

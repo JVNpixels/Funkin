@@ -66,6 +66,8 @@ class NoteStyleEditorState extends UIState
 
   public var strumline:Strumline;
 
+  public static var noteStyleInUse:NoteStyle;
+
   public function new()
   {
     super();
@@ -95,6 +97,7 @@ class NoteStyleEditorState extends UIState
 
     strumline = new Strumline(NoteStyleRegistry.instance.fetchDefault(), true, Constants.DEFAULT_SCROLLSPEED);
     strumline.screenCenter();
+    strumline.scrollFactor.set(0, 0);
     add(strumline);
 
     if (sustain != null)
@@ -146,7 +149,7 @@ class NoteStyleEditorState extends UIState
   public function loadNoteStyle(noteStyleString:String) // check if the path exists, rather than loading a class
   {
     nameID = noteStyleString;
-    var noteStyleInUse = new NoteStyle(noteStyleString);
+    noteStyleInUse = new NoteStyle(noteStyleString);
     loadData(noteStyleInUse);
     @:privateAccess
     strumline.noteStyle = noteStyleInUse;
@@ -265,7 +268,7 @@ class NoteStyleEditorState extends UIState
     if (pressingControl() && haxe.ui.focus.FocusManager.instance.focus == null)
     {
       if (FlxG.keys.justPressed.N && NoteStyleEditorDialogHandler.welcomeDialog == null) NoteStyleEditorActionHandler.doCreationProcess(this, "New NoteStyle");
-      if (FlxG.keys.justPressed.O) NoteStyleEditorActionHandler.doCreationProcess(this, "Open NoteStyle");
+      if (FlxG.keys.justPressed.O) NoteStyleEditorActionHandler.doAction(this, "Open NoteStyle");
       if (FlxG.keys.justPressed.Q) exitEditor();
       if (FlxG.keys.justPressed.S) saveNoteStyle();
     }

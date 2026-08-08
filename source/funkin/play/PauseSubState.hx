@@ -86,6 +86,18 @@ class PauseSubState extends MusicBeatSubState
   ];
 
   /**
+   * Pause menu entries for when the game is paused in the NoteStyle Editor preview.
+   */
+  static final PAUSE_MENU_ENTRIES_NOTESTYLE_EDITOR:Array<PauseMenuEntry> = [
+    {text: 'Resume', callback: resume},
+    {
+      text: 'Restart Song',
+      callback: restartPlayState
+    },
+    {text: 'Return to Note Editor', callback: quitToNoteStyleEditor},
+  ];
+
+  /**
    * Pause menu entries for when the user selects "Change Difficulty".
    */
   static final PAUSE_MENU_ENTRIES_DIFFICULTY:Array<PauseMenuEntry> = [
@@ -879,6 +891,8 @@ class PauseSubState extends MusicBeatSubState
         currentMenuEntries = PAUSE_MENU_ENTRIES_STANDARD.clone();
       case PauseMode.Charting:
         currentMenuEntries = PAUSE_MENU_ENTRIES_CHARTING.clone();
+      case PauseMode.NoteStyle:
+        currentMenuEntries = PAUSE_MENU_ENTRIES_NOTESTYLE_EDITOR.clone();
       case PauseMode.Difficulty:
         // Prepend the difficulties.
         var entries:Array<PauseMenuEntry> = [];
@@ -997,6 +1011,8 @@ class PauseSubState extends MusicBeatSubState
         metadataDeaths.text = '${PlayState.instance?.deathCounter} Blue Balls';
       case Charting:
         metadataDeaths.text = 'Chart Editor Preview';
+      case NoteStyle:
+        metadataDeaths.text = 'NoteStyle Editor Preview';
       case Conversation:
         metadataDeaths.text = 'Dialogue Paused';
       case Cutscene:
@@ -1249,6 +1265,25 @@ class PauseSubState extends MusicBeatSubState
     PlayState.instance?.vocals?.pause();
     PlayState.instance?.close(); // This only works because PlayState is a substate!
   }
+
+  /**
+   * Quit the game and return to the notestyle editor.
+   * @param state The current PauseSubState.
+   */
+  @:access(funkin.play.PlayState)
+  static function quitToNoteStyleEditor(state:PauseSubState):Void
+  {
+    #if FEATURE_MOBILE_ADVERTISEMENTS
+    AdMobUtil.removeBanner();
+    #end
+    // This should come first because the sounds list gets cleared!
+    PlayState.instance?.forEachPausedSound(s -> s.destroy());
+    state.close();
+    FlxG.sound.music?.pause(); // Don't reset song position!
+    PlayState.instance?.vocals?.pause();
+    PlayState.instance?.close(); // This only works because PlayState is a substate!
+    FlxG.camera.zoom = 1;
+  }
 }
 
 /**
@@ -1265,6 +1300,11 @@ enum PauseMode
    * The menu displayed when the player pauses the game during a song while in charting mode.
    */
   Charting;
+
+  /**
+   * The menu displayed when the player pauses the game during a song while previewing a notestyle from the NoteStyle editor.
+   */
+  NoteStyle;
 
   /**
    * The menu displayed when the player moves to change the game's difficulty.
