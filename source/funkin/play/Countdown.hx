@@ -9,6 +9,7 @@ import funkin.util.EaseUtil;
 import funkin.audio.FunkinSound;
 import funkin.data.notestyle.NoteStyleRegistry;
 import funkin.play.notes.notestyle.NoteStyle;
+import funkin.ui.debug.notestyle.NoteStyleEditorState;
 
 class Countdown
 {
@@ -211,6 +212,7 @@ class Countdown
     if (noteStyleId == null) noteStyleId = PlayState.instance?.currentChart?.noteStyle;
 
     noteStyle = NoteStyleRegistry.instance.fetchEntry(noteStyleId);
+    if (PlayState.instance.isNoteStyleEditorMode) noteStyle = NoteStyleEditorState.noteStyleInUse;
     if (noteStyle == null) noteStyle = NoteStyleRegistry.instance.fetchDefault();
   }
 
