@@ -95,9 +95,10 @@ class NoteStyleEditorDialogHandler
     }
   }
 
-  public static function showTestingSongsDialog(state:NoteStyleEditorState, closable:Bool = true)
+  public static function showTestingSongsDialog(state:NoteStyleEditorState, minimalMode:Bool = false, closable:Bool = true)
   {
-    testingSongsDialog = new SongsDialog(state);
+    trace("\n\n\n da minimal mode shit when handling dialogs: " + minimalMode + "\n\n\n");
+    testingSongsDialog = new SongsDialog(state, minimalMode);
     testingSongsDialog.showDialog();
     testingSongsDialog.closable = closable;
     testingSongsDialog.onDialogClosed = function(_)
@@ -106,9 +107,9 @@ class NoteStyleEditorDialogHandler
     }
   }
 
-  public static function showTestingVariationsDialog(state:NoteStyleEditorState, songData:Song, closable:Bool = true)
+  public static function showTestingVariationsDialog(state:NoteStyleEditorState, songData:Song, minimalMode:Bool = false, closable:Bool = true)
   {
-    testingVariationsDialog = new VariationsDialog(state, songData);
+    testingVariationsDialog = new VariationsDialog(state, songData, minimalMode);
     testingVariationsDialog.showDialog();
     testingVariationsDialog.closable = closable;
     testingVariationsDialog.onDialogClosed = function(_)
@@ -117,9 +118,9 @@ class NoteStyleEditorDialogHandler
     }
   }
 
-  public static function showTestingDifficultiesDialog(state:NoteStyleEditorState, songData:Song, ?variation:String, closable:Bool = true)
+  public static function showTestingDifficultiesDialog(state:NoteStyleEditorState, songData:Song, ?variation:String, minimalMode:Bool = false, closable:Bool = true)
   {
-    testingDifficultiesDialog = new DifficultiesDialog(state, songData, variation);
+    testingDifficultiesDialog = new DifficultiesDialog(state, songData, variation, minimalMode);
     testingDifficultiesDialog.showDialog();
     testingDifficultiesDialog.closable = closable;
     testingDifficultiesDialog.onDialogClosed = function(_)

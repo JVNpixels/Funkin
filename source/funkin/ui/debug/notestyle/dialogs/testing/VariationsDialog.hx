@@ -15,7 +15,7 @@ class VariationsDialog extends Dialog
 {
   var notestyleEditorState:NoteStyleEditorState;
 
-  override public function new(state:NoteStyleEditorState, ?songData:Song)
+  override public function new(state:NoteStyleEditorState, ?songData:Song, minimalMode:Bool = false)
   {
     super();
 
@@ -26,7 +26,7 @@ class VariationsDialog extends Dialog
 
     if (variations == null || variations.length == 1)
     {
-      NoteStyleEditorDialogHandler.showTestingDifficultiesDialog(state, songData, variations[0]); // We can use the first variation pushed in the array, since the game has already determined that there is only 1 variation.
+      NoteStyleEditorDialogHandler.showTestingDifficultiesDialog(state, songData, variations[0], minimalMode); // We can use the first variation pushed in the array, since the game has already determined that there is only 1 variation.
       killDialog();
       return;
     }
@@ -42,7 +42,7 @@ class VariationsDialog extends Dialog
 
       link.onClick = function(_)
       {
-        NoteStyleEditorDialogHandler.showTestingDifficultiesDialog(state, songData, variation);
+        NoteStyleEditorDialogHandler.showTestingDifficultiesDialog(state, songData, variation, minimalMode);
         killDialog();
       }
 

@@ -14,7 +14,7 @@ class DifficultiesDialog extends Dialog
 {
   var notestyleEditorState:NoteStyleEditorState;
 
-  override public function new(state:NoteStyleEditorState, ?songData:Song, ?variation:String)
+  override public function new(state:NoteStyleEditorState, ?songData:Song, ?variation:String, minimalMode:Bool = false)
   {
     super();
 
@@ -39,7 +39,7 @@ class DifficultiesDialog extends Dialog
 
       link.onClick = function(_)
       {
-       loadPlayState(songData, variation, difficulty);
+       loadPlayState(songData, variation, difficulty, minimalMode);
        killDialog();
       }
 
@@ -47,13 +47,14 @@ class DifficultiesDialog extends Dialog
     }
   }
 
-  function loadPlayState(songData:Song, ?variation:String, ?difficulty:String)
+  function loadPlayState(songData:Song, ?variation:String, ?difficulty:String, minimal:Bool = false)
   {
     var targetStateParams = {
       targetSong: songData,
       targetVariation: variation ?? Constants.DEFAULT_VARIATION,
       targetDifficulty: difficulty ?? Constants.DEFAULT_DIFFICULTY,
-      targetInstrumental: variation == "default" ? "" : variation
+      targetInstrumental: variation == "default" ? "" : variation,
+      minimalMode: minimal
     };
 
     LoadingState.loadPlayState(targetStateParams, false, true);
