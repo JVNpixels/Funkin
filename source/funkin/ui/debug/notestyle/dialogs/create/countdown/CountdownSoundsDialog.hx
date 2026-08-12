@@ -77,17 +77,17 @@ class CountdownSoundsDialog extends Dialog
             switch (step)
             {
                 case "Three":
-                    NoteStyleEditorCountdownHandler.THREE_SOUND = selectedFile.fullPath;
+                    NoteStyleEditorCountdownHandler.THREE_SOUND = selectedFile;
                     NoteStyleEditorCountdownHandler.THREE_SOUND_NAME = selectedFile.name;
                 case "Two":
-                    NoteStyleEditorCountdownHandler.TWO_SOUND = selectedFile.fullPath;
+                    NoteStyleEditorCountdownHandler.TWO_SOUND = selectedFile;
                     NoteStyleEditorCountdownHandler.TWO_SOUND_NAME = selectedFile.name;
                 case "One":
-                    NoteStyleEditorCountdownHandler.ONE_SOUND = selectedFile.fullPath;
+                    NoteStyleEditorCountdownHandler.ONE_SOUND = selectedFile;
                     NoteStyleEditorCountdownHandler.ONE_SOUND_NAME = selectedFile.name;
                 case "Go":
-                    NoteStyleEditorCountdownHandler.GO_SOUND = selectedFile.fullPath;
-                     NoteStyleEditorCountdownHandler.GO_SOUND_NAME = selectedFile.name;
+                    NoteStyleEditorCountdownHandler.GO_SOUND = selectedFile;
+                    NoteStyleEditorCountdownHandler.GO_SOUND_NAME = selectedFile.name;
             }
             #if FEATURE_FILE_DROP
             entry.countdownSoundsEntryLabel.text = 'Sound for countdown step $step (drag and drop, or click to browse)\nSelected file: ${selectedFile.name}';

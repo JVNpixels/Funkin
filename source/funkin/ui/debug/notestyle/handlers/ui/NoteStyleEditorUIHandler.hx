@@ -91,6 +91,8 @@ class NoteStyleEditorUIHandler
 
     state.menubarItemTest.onClick = function(_) NoteStyleEditorDialogHandler.showTestingSongsDialog(state);
     state.menubarItemTestMinimalMode.onClick = function(_) NoteStyleEditorDialogHandler.showTestingSongsDialog(state, true);
+
+    state.menubarItemToggleToolboxMetadata.onClick = function(_) NoteStyleEditorToolboxHandler.showToolbox(state, "Metadata");
   }
 }
 #end

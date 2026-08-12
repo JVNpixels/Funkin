@@ -4,8 +4,8 @@ package funkin.ui.debug.notestyle.dialogs.testing;
 import haxe.ui.containers.dialogs.Dialog;
 import haxe.ui.containers.dialogs.Dialogs;
 import haxe.ui.components.Link;
+import funkin.ui.debug.notestyle.handlers.testing.NoteStyleEditorPlayStateHandler;
 import funkin.play.notes.notestyle.NoteStyle;
-import funkin.ui.transition.LoadingState;
 import funkin.data.song.SongRegistry;
 import funkin.play.song.Song;
 
@@ -24,11 +24,12 @@ class DifficultiesDialog extends Dialog
 
     if (difficulties == null || difficulties.length == 1)
     {
-      loadPlayState(songData, variation, difficulties[0]); // We can use the first difficulty pushed in the array, since the game has already determined that there is only 1 difficulty in the current variation.
+      NoteStyleEditorPlayStateHandler.loadPlayState(songData, variation, difficulties[0], minimalMode); // We can use the first difficulty pushed in the array, since the game has already determined that there is only 1 difficulty in the current variation.
       return;
     }
 
     this.title = '${songData.songName} (${variation.toTitleCase()}) - Select a Difficulty';
+    if (minimalMode) this.title += ' (Minimal Mode)';
 
     for (difficulty in difficulties)
     {
@@ -39,25 +40,12 @@ class DifficultiesDialog extends Dialog
 
       link.onClick = function(_)
       {
-       loadPlayState(songData, variation, difficulty, minimalMode);
+       NoteStyleEditorPlayStateHandler.loadPlayState(songData, variation, difficulty, minimalMode);
        killDialog();
       }
 
       splashTemplateContainer.addComponent(link);
     }
-  }
-
-  function loadPlayState(songData:Song, ?variation:String, ?difficulty:String, minimal:Bool = false)
-  {
-    var targetStateParams = {
-      targetSong: songData,
-      targetVariation: variation ?? Constants.DEFAULT_VARIATION,
-      targetDifficulty: difficulty ?? Constants.DEFAULT_DIFFICULTY,
-      targetInstrumental: variation == "default" ? "" : variation,
-      minimalMode: minimal
-    };
-
-    LoadingState.loadPlayState(targetStateParams, false, true);
   }
 
   function killDialog()

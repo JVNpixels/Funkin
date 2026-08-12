@@ -78,16 +78,16 @@ class CountdownImagesDialog extends Dialog
             switch (step)
             {
                 case "Three":
-                    NoteStyleEditorCountdownHandler.THREE_IMAGE = selectedFile.fullPath;
+                    NoteStyleEditorCountdownHandler.THREE_IMAGE = selectedFile;
                     NoteStyleEditorCountdownHandler.THREE_IMAGE_NAME = selectedFile.name;
                 case "Two":
-                    NoteStyleEditorCountdownHandler.TWO_IMAGE = selectedFile.fullPath;
+                    NoteStyleEditorCountdownHandler.TWO_IMAGE = selectedFile;
                     NoteStyleEditorCountdownHandler.TWO_IMAGE_NAME = selectedFile.name;
                 case "One":
-                    NoteStyleEditorCountdownHandler.ONE_IMAGE = selectedFile.fullPath;
+                    NoteStyleEditorCountdownHandler.ONE_IMAGE = selectedFile;
                     NoteStyleEditorCountdownHandler.ONE_IMAGE_NAME = selectedFile.name;
                 case "Go":
-                    NoteStyleEditorCountdownHandler.GO_IMAGE = selectedFile.fullPath;
+                    NoteStyleEditorCountdownHandler.GO_IMAGE = selectedFile;
                      NoteStyleEditorCountdownHandler.GO_IMAGE_NAME = selectedFile.name;
             }
 

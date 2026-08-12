@@ -32,6 +32,7 @@ class VariationsDialog extends Dialog
     }
 
     this.title = '${songData.songName} - Select a Variation';
+    if (minimalMode) this.title += ' (Minimal Mode)';
 
     for (variation in variations)
     {
@@ -43,6 +44,7 @@ class VariationsDialog extends Dialog
       link.onClick = function(_)
       {
         NoteStyleEditorDialogHandler.showTestingDifficultiesDialog(state, songData, variation, minimalMode);
+        // prevent the difficulties dialog from opening here, check if the songs cur variation has 1 diff listed (shit like reprogrammed from mii funkin homebrew'd)
         killDialog();
       }
 

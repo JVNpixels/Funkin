@@ -15,8 +15,10 @@ import haxe.ui.containers.windows.WindowManager;
 import haxe.ui.components.Label;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
+import flixel.FlxSubState;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.util.FlxColor;
+import funkin.data.song.SongData.SongNoteData;
 import funkin.audio.FunkinSound;
 import funkin.save.Save;
 import funkin.input.Cursor;
@@ -76,15 +78,15 @@ class NoteStyleEditorState extends UIState
   override public function create():Void
   {
     WindowManager.instance.reset();
-    instance = this;
-    FlxG.sound.music?.stop();
     WindowUtil.setWindowTitle("Friday Night Funkin\' NoteStyle Editor");
+
+    instance = this;
+
+    FileUtil.createDirIfNotExists("backups/notestyles");
 
     setupAutoSave();
 
     if (Preferences.debugDisplay == DebugDisplayMode.Off) menubar.paddingLeft = null;
-
-    FileUtil.createDirIfNotExists("backups/notestyles");
 
     persistentUpdate = false;
 
@@ -138,8 +140,9 @@ class NoteStyleEditorState extends UIState
   }
   #end
 
-  public function startMusic()
+  public function startMusic(?_:FlxSubState):Void
   {
+    FlxG.sound.music?.stop();
     FunkinSound.playMusic('chartEditorLoop', {
       startingVolume: 0.0
     });
@@ -176,6 +179,9 @@ class NoteStyleEditorState extends UIState
     name = noteStyle.getName();
     nameID = noteStyle.getName().toLowerCase();
     author = noteStyle.getAuthor();
+    #if FEATURE_DISCORD_RPC
+    updateDiscordRPC();
+    #end
     @:privateAccess
     if (noteStyle.get_fallback() == null)
     {
@@ -199,7 +205,7 @@ class NoteStyleEditorState extends UIState
 
   function exitEditor()
   {
-    saveAudioPreferences();
+    NoteStyleEditorHitsoundsHandler.saveHitsoundVolume(this);
 
     resetWindowTitle();
 
@@ -243,22 +249,15 @@ class NoteStyleEditorState extends UIState
    */
   function onWindowClose(exitCode:Int):Void
   {
+    NoteStyleEditorHitsoundsHandler.saveHitsoundVolume(this);
     trace('Window exited with exit code: $exitCode');
-
-    saveAudioPreferences();
   }
 
   function onWindowCrash(message:String):Void
   {
+    NoteStyleEditorHitsoundsHandler.saveHitsoundVolume(this);
     trace('NoteStyle editor intercepted crash:');
     trace('${message}');
-
-    saveAudioPreferences();
-  }
-
-  public function saveAudioPreferences()
-  {
-    NoteStyleEditorHitsoundsHandler.saveHitsoundVolume(this);
   }
 
   override public function update(elapsed:Float):Void
@@ -277,7 +276,7 @@ class NoteStyleEditorState extends UIState
 
     if (FlxG.keys.justPressed.F4 && haxe.ui.focus.FocusManager.instance.focus == null)
     {
-      saveAudioPreferences();
+      NoteStyleEditorHitsoundsHandler.saveHitsoundVolume(this);
 
       resetWindowTitle();
 

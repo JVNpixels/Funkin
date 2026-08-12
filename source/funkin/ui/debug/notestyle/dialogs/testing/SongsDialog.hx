@@ -13,16 +13,14 @@ import funkin.play.song.Song;
 @:build(haxe.ui.macros.ComponentMacros.build("assets/exclude/data/ui/notestyle-editor/dialogs/testing/songs.xml"))
 class SongsDialog extends Dialog
 {
-  var notestyleEditorState:NoteStyleEditorState;
-
   override public function new(state:NoteStyleEditorState, minimalMode:Bool = false)
   {
     super();
 
-    notestyleEditorState = state;
-
     var songs:Array<String> = SongRegistry.instance.listEntryIds();
     songs.sort(funkin.util.SortUtil.alphabetically);
+
+    if (minimalMode) this.title += ' (Minimal Mode)';
 
     for (song in songs)
     {

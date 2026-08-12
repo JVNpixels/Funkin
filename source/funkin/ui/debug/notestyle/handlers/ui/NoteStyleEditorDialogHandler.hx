@@ -97,7 +97,6 @@ class NoteStyleEditorDialogHandler
 
   public static function showTestingSongsDialog(state:NoteStyleEditorState, minimalMode:Bool = false, closable:Bool = true)
   {
-    trace("\n\n\n da minimal mode shit when handling dialogs: " + minimalMode + "\n\n\n");
     testingSongsDialog = new SongsDialog(state, minimalMode);
     testingSongsDialog.showDialog();
     testingSongsDialog.closable = closable;
